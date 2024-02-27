@@ -1,0 +1,23 @@
+Package: MotifStats
+Title: Uncover the relationship between peaks and motifs
+Version: 0.0.0.9000
+Authors@R: 
+  person(given = "Thomas", family = "Roberts", 
+	email = "tomroberts.work15@gmail.com", 
+	role = c("aut", "cre"),
+	comment = c(ORCID = "0009-0006-6244-8670"))
+Description: What the package does (one paragraph).
+License: GPL (>= 3)
+Encoding: UTF-8
+LazyData: true
+Depends: 
+  R (>= 4.2.0)
+Imports:
+  rtracklayer
+Suggests: 
+  knitr,
+  rmarkdown,
+  rworkflows,
+  testthat (>= 3.0.0),
+  withr
+RoxygenNote: 7.3.1
