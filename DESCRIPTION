@@ -7,6 +7,7 @@ Authors@R:
 	role = c("aut", "cre"),
 	comment = c(ORCID = "0009-0006-6244-8670"))
 Description: What the package does (one paragraph).
+URL: https://github.com/Tomrrr1/MotifStats
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
@@ -21,3 +22,4 @@ Suggests:
   testthat (>= 3.0.0),
   withr
 RoxygenNote: 7.3.1
+VignetteBuilder: knitr
