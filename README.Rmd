@@ -1,7 +1,8 @@
 ---
-title: "`r read.dcf('DESCRIPTION', fields = 'Package')[1]`"  
+title: ""  
 author: "`r rworkflows::use_badges()`" 
-date: "<h4>README updated: <i>`r format( Sys.Date(), '%b-%d-%Y')`</i></h4>"
-output:
-  github_document
+date: ""
+output: github_document
 ---
+
+## MotifStats
