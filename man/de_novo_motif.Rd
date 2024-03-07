@@ -4,8 +4,32 @@
 \alias{de_novo_motif}
 \title{Perform de novo motif discovery}
 \usage{
-de_novo_motif()
+de_novo_motif(peak_file, control = "weak_peaks", method, ...)
+}
+\arguments{
+\item{peak_file}{Character string specifying the path to the narrowPeak file.}
+
+\item{control}{The default is to use the top 0.1 peaks as input (ranked by
+q-value) and the remaining 0.9 peaks as the background. If you wish to
+supply your own control sequences these must be passed as a DNAStringSet
+object.}
+
+\item{method}{De novo motif discovery method to use. The choices are
+"Streme", "Meme" and "rGADEM". Please note that Streme requires the MEME
+suite to be installed on your machine. You can find installation instructions
+here.}
+
+\item{...}{Additional parameters to be passed to Streme, Meme or rGADEM. See
+the respective documentation for more details.}
+}
+\value{
+The output of either Streme, Meme or rGADEM.
 }
 \description{
-Use the memes package to run de novo motif discovery with meme.
+\code{de_novo_motif()} is a wrapper of several de novo motif discovery
+methods, including Streme (meme suite), meme and rGADEM.
+}
+\details{
+Streme is preferable over Meme, except when you have a small number of
+input sequences (< 50).
 }

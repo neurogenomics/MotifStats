@@ -18,8 +18,6 @@
 #' @export
 read_peak_file <- function(file_path){
   obj <- rtracklayer::import(file_path, format = "narrowPeak")
-
-  # Add names()
   names(obj) <- GenomicRanges::mcols(obj)$name
 
   # Add metadata summit column

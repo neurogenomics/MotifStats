@@ -42,19 +42,35 @@ peak_proportion <- function(peak_file,
                             min_score = 0.8
                             ) { # add outdir option for writing "true" peaks
   peaks <- read_peak_file(peak_file)
+  control_sequences <- adjacent_sequences(peaks)
+
   hits <- get_motif_hits(peaks = peaks,
                          pwm = pwm,
                          min_score = min_score
                          )
+  control_hits <- get_motif_hits(peaks = control_sequences,
+                                 pwm = pwm,
+                                 min_score = min_score
+                                 )
+
   sig <- TFBSTools::relScore(hits)
+  control_sig <- TFBSTools::relScore(control_hits)
 
   # 1 motif per peak
   onehit_peak_names <- names(sig)[sapply(sig, length) > 0]
   onehit_peaks <- peaks[names(peaks) %in% onehit_peak_names, ]
 
+  onehit_ctrl_names <- names(control_sig)[sapply(control_sig, length) > 0]
+  onehit_ctrl <-
+    control_sequences[names(control_sequences) %in% onehit_ctrl_names, ]
+
   # > 1 motif per peak
   mt1_peak_names <- names(sig)[sapply(sig, length) > 1]
   mt1_peaks <- peaks[names(peaks) %in% mt1_peak_names, ]
+
+  mt1_ctrl_names <- names(control_sig)[sapply(control_sig, length) > 1]
+  mt1_ctrl <-
+    control_sequences[names(control_sequences) %in% mt1_ctrl_names, ]
 
   if (plot) {
     ranked_peaks <- peaks[order(-GenomicRanges::mcols(peaks)$qValue)]
@@ -89,8 +105,10 @@ peak_proportion <- function(peak_file,
     list(
       one_hit_peak_prop = onehit_peaks,
       proportion_1_motif = length(onehit_peaks) / length(peaks),
+      ctrl_proportion_1_motif = length(onehit_ctrl) / length(control_sequences),
       mt1_hit_peak_prop = mt1_peaks,
-      proportion_mt1_motifs = length(mt1_peaks) / length(peaks)
+      proportion_mt1_motifs = length(mt1_peaks) / length(peaks),
+      ctrl_mt1_proportion = length(mt1_ctrl) / length(control_sequences)
     )
   )
 }

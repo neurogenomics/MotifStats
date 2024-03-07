@@ -18,13 +18,14 @@ Depends:
   R (>= 4.2.0)
 Imports:
   BSgenome,
+  BSgenome.Hsapiens.UCSC.hg38,
+  GenomicRanges,
   ggplot2,
   rtracklayer,
   S4Vectors,
   TFBSTools,
   universalmotif
 Suggests: 
-  BSgenome.Hsapiens.UCSC.hg38,
   knitr,
   rmarkdown,
   rworkflows,

@@ -20,7 +20,7 @@ get_motif_hits <- function(peaks,
   hits <- TFBSTools::searchSeq(
     x = pwm,
     subject = peak_sequences,
-    strand = "+",
+    strand = "*",
     min.score = min_score
   )
 
