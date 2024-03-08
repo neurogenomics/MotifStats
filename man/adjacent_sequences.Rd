@@ -11,7 +11,8 @@ adjacent_sequences(peaks)
 }
 \description{
 \code{adjacent_sequences()} generates sequences adjacent to each peak in
-"peaks". These sequences will be used as a reference when calculating the
-proportion of peaks with a motif.
+"peaks". These adjacent sequences will have the same width as the peaks.
+These are used as a reference when calculating the proportion of peaks with
+a motif.
 }
 \keyword{internal}
