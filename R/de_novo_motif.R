@@ -20,6 +20,22 @@
 #'
 #' @returns The output of either Streme, Meme or rGADEM.
 #'
+#' @examples
+#' \dontrun{
+#' peak_file <- system.file("extdata",
+#'                          "rep1_peaks.narrowPeak",
+#'                          package = "MotifStats"
+#'                          )
+#'
+#' data("creb_motif", package = "MotifStats")
+#'
+#' de_novo_motif(peak_file = peak_file,
+#'               pwm = creb_motif,
+#'               plot = TRUE,
+#'               min_score = 0.8
+#'               )
+#' }
+#'
 #' @export
 de_novo_motif <- function(peak_file,
                           control = "weak_peaks",
