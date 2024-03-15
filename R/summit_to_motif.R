@@ -5,7 +5,6 @@
 #' enrichment is highest.
 #'
 #' @import rtracklayer
-#' @import S4Vectors
 #' @import BSgenome
 #' @import BSgenome.Hsapiens.UCSC.hg38
 #' @import TFBSTools
@@ -22,23 +21,59 @@
 #'
 #' summit_to_motif(peak_file = "read1_01_peaks.narrowPeak",
 #'                 pwm = pwm,
-#'                 min_score = 0.8
+#'                 min_score = NULL,
+#'                 optimal_min_score = TRUE,
+#'                 seed = 123
 #'                 )
 #'                 }
 #' @export
-summit_to_motif <- function(peak_file,
+summit_to_motif <- function(peak_input,
                             pwm,
-                            min_score = 0.8) {
-  peaks <- read_peak_file(peak_file)
-  hits <- get_motif_hits(peaks = peaks,
-                         pwm = pwm,
-                         min_score = min_score
-                         )
+                            min_score = NULL,
+                            optimal_min_score = TRUE,
+                            seed) {
+  if (is.character(peak_input)) {
+    normalizePath(peak_input, mustWork = "TRUE") # error if path is invalid
+    peaks <- read_peak_file(peak_input)
+  } else if (inherits(peak_input, "GRanges")) {
+    peaks <- peak_input
+  } else {
+    stopper(
+      "peak_input must be a path to a peak file or a GRanges object",
+      "with a 0-based summit column. This can be generated using",
+      "read_peak_file(file_path)."
+    )
+  }
+
+  if (optimal_min_score) {
+    min_score <- optimal_min_score(
+      peaks = peaks,
+      pwm = pwm,
+      genome_build = genome_build,
+      seed = seed
+    )
+    messager("Optimal min_score found:", min_score)
+
+  } else if (!is.null(min_score)) {
+    min_score <- min_score
+
+  } else {
+    stopper("Either optimal_min_score is set to TRUE or min_score must be",
+            "supplied.")
+  }
+
+  hits <- get_motif_hits(
+    peaks = peaks,
+    pwm = pwm,
+    min_score = min_score,
+    genome_build = genome_build
+  )
   # Write the motif hits to GFF3
   motif_coord_df <- TFBSTools::writeGFF3(hits)
 
   # Find peaks with multiple motifs
-  index_to_repeat <- base::match(motif_coord_df$seqname, names(peaks))
+  index_to_repeat <-
+    base::match(motif_coord_df$seqname, names(peaks))
 
   # Expand the peak object to repeat the peaks that have >1 motif
   expanded_peaks <- peaks[index_to_repeat]
@@ -49,7 +84,7 @@ summit_to_motif <- function(peak_file,
   mcols(expanded_peaks)$motif_end <-
     GenomicRanges::start(expanded_peaks) + motif_coord_df$end
 
-  # Calculate motif centers and distance to summit
+  # Calculate motif centres and distance to summit
   motif_center <-
     (mcols(expanded_peaks)$motif_start + mcols(expanded_peaks)$motif_end) / 2
   distance_to_summit <-
@@ -58,8 +93,14 @@ summit_to_motif <- function(peak_file,
   # Adding distance to metadata
   mcols(expanded_peaks)$distance_to_summit <- distance_to_summit
 
-  return(list(peak_set = expanded_peaks,
-              distance_to_summit = distance_to_summit))
+  return(
+    list(
+      peak_set = expanded_peaks,
+      distance_to_summit = distance_to_summit,
+      seed = seed,
+      min_score = min_score
+    )
+  )
 }
 
 # CTCF motif
@@ -74,5 +115,3 @@ summit_to_motif <- function(peak_file,
 #
 # median(one$distance_to_summit)
 # median(two$distance_to_summit)
-
-

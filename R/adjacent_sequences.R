@@ -15,41 +15,6 @@
 #'
 #' @keywords internal
 
-# adjacent_sequences <- function(peaks) {
-#   # Retrieve the width of each peak using width() accessor
-#   peak_widths <- GenomicRanges::width(peaks)
-#
-#   # Retrieve chromosome lengths for boundary checks
-#   chrom_sizes <-
-#     GenomeInfoDb::seqlengths( # add genome_build option
-#       BSgenome.Hsapiens.UCSC.hg38::BSgenome.Hsapiens.UCSC.hg38
-#       )
-#
-#   # Randomly choose the side that each adjacent sequence will be placed
-#   is_upstream <- sample(c(TRUE, FALSE), size = length(peaks), replace = TRUE)
-#
-#   for (i in seq_along(peaks)) {
-#     chrom <- as.character(seqnames(peaks)[i])
-#     chrom_length <- chrom_sizes[chrom]
-#
-#     if (is_upstream[i]) {
-#       # Control sequence will be upstream
-#       new_end <- start(peaks)[i] - 1
-#       new_start <- max(1, new_end - peak_widths[i] + 1)
-#     } else {
-#       # Control sequence will be downstream
-#       new_start <- end(peaks)[i] + 1
-#       new_end <- min(chrom_length, new_start + peak_widths[i] - 1)
-#     }
-#
-#     # Update the peak coordinates
-#     start(peaks)[i] <- new_start
-#     end(peaks)[i] <- new_end
-#   }
-#
-#   return(peaks)
-# }
-
 adjacent_sequences <- function(peaks) {
   peak_widths <- GenomicRanges::width(peaks)
   chrom_sizes <- GenomeInfoDb::seqlengths(
@@ -67,22 +32,21 @@ adjacent_sequences <- function(peaks) {
     if (is_upstream) {
       new_end <- start(peaks)[i] - 1
       new_start <- new_end - peak_width + 1
-      if (new_start < 1) { # If the position of the seq start is < 1 (out of bounds)
+      if (new_start < 1) {
         new_start <- end(peaks)[i] + 1
         new_end <- new_start + peak_width - 1
       }
     } else {
       new_start <- end(peaks)[i] + 1
       new_end <- new_start + peak_width - 1
-      if (new_end > chrom_length) { # if the position of the seq end is > the chrom length (out of bounds)
+      if (new_end > chrom_length) {
         new_end <- start(peaks)[i] - 1
         new_start <- new_end - peak_width + 1
       }
     }
 
-    c(new_start, new_end)
+    return(c(new_start, new_end))
   }
-
   # Apply the function to each peak
   peak_background <- t(sapply(seq_along(peaks), process_peak))
 

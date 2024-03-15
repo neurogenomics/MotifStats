@@ -4,7 +4,6 @@
 #' \code{TFBSTools} to scan each peak for the presence of a motif.
 #'
 #' @import BSgenome
-#' @import BSgenome.Hsapiens.UCSC.hg38
 #' @importFrom TFBSTools searchSeq
 #'
 #' @inheritParams peak_proportion
@@ -13,11 +12,13 @@
 #' @keywords internal
 get_motif_hits <- function(peaks,
                            pwm,
-                           min_score){
+                           min_score,
+                           genome_build = genome_build){
   peak_sequences <-
-    BSgenome::getSeq(BSgenome.Hsapiens.UCSC.hg38::BSgenome.Hsapiens.UCSC.hg38,
+    BSgenome::getSeq(genome_build,
                      peaks)
-  hits <- TFBSTools::searchSeq(
+
+  hits <- TFBSTools::searchSeq( # Consider using scan_sequence instead of searchSeq.
     x = pwm,
     subject = peak_sequences,
     strand = "*",
