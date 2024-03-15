@@ -29,9 +29,12 @@
 #' @export
 summit_to_motif <- function(peak_input,
                             pwm,
-                            min_score = NULL,
-                            optimal_min_score = TRUE,
-                            seed) {
+                            min_score = 0.8,
+                            genome_build,
+                            optimal_min_score = FALSE,
+                            seed = NULL) {
+  if(!is.null(seed)) set.seed(seed)
+
   if (is.character(peak_input)) {
     normalizePath(peak_input, mustWork = "TRUE") # error if path is invalid
     peaks <- read_peak_file(peak_input)
@@ -49,8 +52,7 @@ summit_to_motif <- function(peak_input,
     min_score <- optimal_min_score(
       peaks = peaks,
       pwm = pwm,
-      genome_build = genome_build,
-      seed = seed
+      genome_build = genome_build
     )
     messager("Optimal min_score found:", min_score)
 

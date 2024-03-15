@@ -33,3 +33,20 @@ methods, including Streme (meme suite), meme and rGADEM.
 Streme is preferable over Meme, except when you have a small number of
 input sequences (< 50).
 }
+\examples{
+\dontrun{
+peak_file <- system.file("extdata",
+                         "rep1_peaks.narrowPeak",
+                         package = "MotifStats"
+                         )
+
+data("creb_motif", package = "MotifStats")
+
+de_novo_motif(peak_file = peak_file,
+              pwm = creb_motif,
+              plot = TRUE,
+              min_score = 0.8
+              )
+}
+
+}

@@ -9,10 +9,12 @@
 #' @param pwm An object of class PWMatrix.
 #' @param seed A single value specifying the state for random number generation.
 #'
-optimal_min_score <- function(peaks, pwm, genome_build, seed) {
-  set.seed(seed)
+optimal_min_score <- function(peaks, pwm, genome_build) {
   # subset peaks
   if (length(peaks) < 500) {
+    messager(
+      "The optimiser may give unreliable results for fewer than 500 peaks"
+      )
     subset_peaks <- peaks
   } else {
     subset_peaks <- sample(peaks, 500)

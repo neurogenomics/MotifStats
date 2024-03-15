@@ -11,8 +11,11 @@ adjacent_sequences(peaks)
 }
 \description{
 \code{adjacent_sequences()} generates sequences adjacent to each peak in
-"peaks". These adjacent sequences will have the same width as the peaks.
-These are used as a reference when calculating the proportion of peaks with
-a motif.
+"peaks".
+}
+\details{
+Adjacent sequences will have the same width as their respective
+peaks. Where a peak is at the boundary of a chromosome, the adjacent
+sequence width will not extend beyond the boundaries of the chromosome.
 }
 \keyword{internal}

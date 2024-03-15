@@ -7,16 +7,19 @@
 read_peak_file(file_path)
 }
 \arguments{
-\item{file_path}{Path to the narrowPeak file}
+\item{file_path}{Path to a narrowPeak file}
 }
 \description{
-\code{read_peak_file()} reads a .narrowPeak file as a GRanges object and adds
-an additional metadata column denoting the peak summit.
+\code{read_peak_file()} reads a narrowPeak file as a GRanges object and adds
+an additional metadata column representing the actual position of the peak
+summit.
 }
 \examples{
 \dontrun{
-peak_file <- "./rep1_peaks.narrowPeak"
-
+peak_file <- system.file("extdata",
+                         "rep1_peaks.narrowPeak",
+                         package = "MotifStats"
+                         )
 peak_obj <- read_peak_file(file_path = peak_file)
 }
 

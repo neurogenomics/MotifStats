@@ -5,22 +5,13 @@ test_that("list outputted by peak_proportion()", {
   data("creb_motif", package = "MotifStats")
 
   res <- peak_proportion(
-    peak_file = peak_file,
+    peak_input = peak_file,
     pwm = creb_motif,
-    plot = FALSE,
-    min_score = 0.8
+    genome_build = BSgenome.Hsapiens.UCSC.hg38::BSgenome.Hsapiens.UCSC.hg38,
+    min_score = 0.8,
+    optimal_min_score = FALSE,
+    seed = 123
   )
 
   expect_true(is.list(res))
 })
-
-ctcf_peaks <- "read1_no_ctrl_01_peaks.narrowPeak"
-motif_pwm <- read_motif_file(motif_file = "MA1930.2.jaspar",
-                             file_format = "jaspar")
-
-peak_proportion(peak_file = ctcf_peaks,
-                pwm = motif_pwm,
-                min_score = 0.6)
-
-
-
