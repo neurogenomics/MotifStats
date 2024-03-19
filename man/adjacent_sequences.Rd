@@ -4,7 +4,7 @@
 \alias{adjacent_sequences}
 \title{Generate sequences immediately adjacent to peaks}
 \usage{
-adjacent_sequences(peaks)
+adjacent_sequences(peaks, genome_build)
 }
 \arguments{
 \item{peaks}{A GRanges peak object}

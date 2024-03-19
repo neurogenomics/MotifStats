@@ -47,7 +47,7 @@ peak_proportion <- function(peak_input,
                             min_score = 0.8,
                             optimal_min_score = FALSE,
                             seed = NULL) {
-  if(!is.null(seed)) set.seed(seed)
+  if (!is.null(seed)) set.seed(seed)
 
   if (is.character(peak_input)) {
     normalizePath(peak_input, mustWork = "TRUE") # error if path is invalid
@@ -61,14 +61,13 @@ peak_proportion <- function(peak_input,
       "read_peak_file(file_path)."
     )
   }
-  ctrl_sequences <- adjacent_sequences(peaks)
+  ctrl_sequences <- adjacent_sequences(peaks,
+                                       genome_build = genome_build)
 
   if (optimal_min_score) {
-    min_score <- optimal_min_score(
-      peaks = peaks,
-      pwm = pwm,
-      genome_build = genome_build
-    )
+    min_score <- optimal_min_score(peaks = peaks,
+                                   pwm = pwm,
+                                   genome_build = genome_build)
     messager("Optimal min_score found:", min_score)
 
   } else if (!is.null(min_score)) {
@@ -97,19 +96,19 @@ peak_proportion <- function(peak_input,
 
   # 1 motif per peak
   onehit_peak_names <- names(sig)[sapply(sig, length) > 0]
-  onehit_peaks <- peaks[names(peaks) %in% onehit_peak_names,]
+  onehit_peaks <- peaks[names(peaks) %in% onehit_peak_names, ]
 
   onehit_ctrl_names <- names(ctrl_sig)[sapply(ctrl_sig, length) > 0]
   onehit_ctrl <-
-    ctrl_sequences[names(ctrl_sequences) %in% onehit_ctrl_names,]
+    ctrl_sequences[names(ctrl_sequences) %in% onehit_ctrl_names, ]
 
   # > 1 motif per peak
   mt1_peak_names <- names(sig)[sapply(sig, length) > 1]
-  mt1_peaks <- peaks[names(peaks) %in% mt1_peak_names,]
+  mt1_peaks <- peaks[names(peaks) %in% mt1_peak_names, ]
 
   mt1_ctrl_names <- names(ctrl_sig)[sapply(ctrl_sig, length) > 1]
   mt1_ctrl <-
-    ctrl_sequences[names(ctrl_sequences) %in% mt1_ctrl_names,]
+    ctrl_sequences[names(ctrl_sequences) %in% mt1_ctrl_names, ]
 
   return(
     list(
@@ -118,7 +117,8 @@ peak_proportion <- function(peak_input,
       ctrl_proportion_1_motif = length(onehit_ctrl) / length(ctrl_sequences),
       mt1_hit_peak_prop = mt1_peaks,
       proportion_mt1_motifs = length(mt1_peaks) / length(peaks),
-      ctrl_mt1_proportion = length(mt1_ctrl) / length(ctrl_sequences)
+      ctrl_mt1_proportion = length(mt1_ctrl) / length(ctrl_sequences),
+      optimal_score = min_score
     )
   )
 }

@@ -15,12 +15,12 @@
 #'
 #' @keywords internal
 
-adjacent_sequences <- function(peaks) {
+adjacent_sequences <- function(peaks,
+                               genome_build) {
   peak_widths <- GenomicRanges::width(peaks)
-  chrom_sizes <- GenomeInfoDb::seqlengths(
-    BSgenome.Hsapiens.UCSC.hg38::BSgenome.Hsapiens.UCSC.hg38
-  )
-  is_upstream <- sample(c(TRUE, FALSE), size = length(peaks), replace = TRUE)
+  chrom_sizes <- GenomeInfoDb::seqlengths(genome_build)
+  is_upstream <-
+    sample(c(TRUE, FALSE), size = length(peaks), replace = TRUE)
 
   # Define a function to process each peak
   process_peak <- function(i) {
@@ -30,18 +30,32 @@ adjacent_sequences <- function(peaks) {
     peak_width <- peak_widths[i]
 
     if (is_upstream) {
+      # adjacent sequence will be upstream
       new_end <- start(peaks)[i] - 1
       new_start <- new_end - peak_width + 1
       if (new_start < 1) {
+        # if the start is out of bounds (try downstream)
         new_start <- end(peaks)[i] + 1
         new_end <- new_start + peak_width - 1
+        if (new_end > chrom_length) {
+          # if the end is out of bounds
+          new_start <- end(peaks)[i] + 1
+          new_end <- min(chrom_length, new_start + peak_width - 1)
+        }
       }
     } else {
+      # adjacent sequence will be downstream
       new_start <- end(peaks)[i] + 1
       new_end <- new_start + peak_width - 1
       if (new_end > chrom_length) {
+        # if the end is out of bounds (try upstream)
         new_end <- start(peaks)[i] - 1
         new_start <- new_end - peak_width + 1
+        if (new_start < 1) {
+          # if the start is out of bounds
+          new_end <- start(peaks)[i] - 1
+          new_start <- max(new_end - peak_width + 1, 1)
+        }
       }
     }
 

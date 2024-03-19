@@ -4,9 +4,8 @@
 #' nearest summit. A peak summit represents the exact nucleotide where signal
 #' enrichment is highest.
 #'
+#' @import GenomicRanges
 #' @import rtracklayer
-#' @import BSgenome
-#' @import BSgenome.Hsapiens.UCSC.hg38
 #' @import TFBSTools
 #'
 #' @inheritParams peak_proportion
@@ -99,8 +98,7 @@ summit_to_motif <- function(peak_input,
     list(
       peak_set = expanded_peaks,
       distance_to_summit = distance_to_summit,
-      seed = seed,
-      min_score = min_score
+      optimal_min_score = min_score
     )
   )
 }
