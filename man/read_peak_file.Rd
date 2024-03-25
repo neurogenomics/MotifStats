@@ -7,12 +7,11 @@
 read_peak_file(file_path)
 }
 \arguments{
-\item{file_path}{Path to a narrowPeak file}
+\item{file_path}{Path to a \code{narrowPeak} file.}
 }
 \description{
 \code{read_peak_file()} reads a narrowPeak file as a GRanges object and adds
-an additional metadata column representing the actual position of the peak
-summit.
+an additional metadata column representing the position of the peak summit.
 }
 \examples{
 \dontrun{

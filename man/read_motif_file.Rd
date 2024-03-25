@@ -2,20 +2,20 @@
 % Please edit documentation in R/read_motif_file.R
 \name{read_motif_file}
 \alias{read_motif_file}
-\title{Read motif file and convert to PWM}
+\title{Read motif file and convert to Position Weight Matrix (PWM)}
 \usage{
 read_motif_file(motif_file, motif_id = "Unknown", file_format)
 }
 \arguments{
 \item{motif_file}{Path to the motif file.}
 
-\item{motif_id}{ID of the motif (e.g. MA1930.1). The default is "Unknown"}
+\item{motif_id}{ID of the motif (e.g. "MA1930.1").}
 
 \item{file_format}{Character string specifying the format of the motif file.
-The options are "jaspar", "meme", "transfac" and "uniprobe"}
+The options are "homer", "jaspar", "meme", "transfac" and "uniprobe"}
 }
 \value{
-A position weight matrix.
+A position weight matrix of class \code{PWMatrix}.
 }
 \description{
 \code{read_motif_file()} reads a motif file and converts to a PWM. The

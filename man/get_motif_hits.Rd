@@ -4,15 +4,18 @@
 \alias{get_motif_hits}
 \title{Scan a set of peaks for a specified motif}
 \usage{
-get_motif_hits(peaks, pwm, min_score, genome_build = genome_build)
+get_motif_hits(peak_sequences, pwm, min_score, genome_build = genome_build)
 }
 \arguments{
-\item{peaks}{A GRanges peak object.}
-
-\item{pwm}{An object of class PWMatrix.}
+\item{pwm}{An object of class \code{PWMatrix}.}
 
 \item{min_score}{Numeric specifying the minimum score a sequence must pass
 to be considered a motif.}
+
+\item{genome_build}{The genome build that the peak sequences should be
+derived from.}
+
+\item{peaks}{A GRanges peak object.}
 }
 \description{
 \code{get_motif_hits()} uses the \code{searchSeq()} function from
