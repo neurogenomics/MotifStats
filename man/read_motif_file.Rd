@@ -15,10 +15,10 @@ read_motif_file(motif_file, motif_id = "Unknown", file_format)
 The options are "homer", "jaspar", "meme", "transfac" and "uniprobe"}
 }
 \value{
-A position weight matrix of class \code{PWMatrix}.
+A \code{universalmotif} motif object.
 }
 \description{
 \code{read_motif_file()} reads a motif file and converts to a PWM. The
 function supports multiple motif formats, including "jaspar", "meme",
-"transfac" and "uniprobe"
+"transfac" and "uniprobe".
 }

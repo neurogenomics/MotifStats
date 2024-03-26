@@ -2,7 +2,7 @@
 #'
 #' \code{read_motif_file()} reads a motif file and converts to a PWM. The
 #' function supports multiple motif formats, including "jaspar", "meme",
-#' "transfac" and "uniprobe"
+#' "transfac" and "uniprobe".
 #'
 #' @importFrom TFBSTools PWMatrix
 #' @import universalmotif
@@ -12,7 +12,7 @@
 #' @param file_format Character string specifying the format of the motif file.
 #' The options are "homer", "jaspar", "meme", "transfac" and "uniprobe"
 #'
-#' @returns A position weight matrix of class \code{PWMatrix}.
+#' @returns A \code{universalmotif} motif object.
 #'
 #' @export
 read_motif_file <- function(motif_file,
@@ -36,11 +36,7 @@ read_motif_file <- function(motif_file,
   # Dynamically select and call the appropriate read function
   read_function <- read_functions[[file_format]]
   motif <- read_function(motif_file)
-  motif_matrix <- motif["motif"] # motif@motif
 
-  # Convert to PWM
-  pwm <- TFBSTools::PWMatrix(ID = motif_id,
-                             profileMatrix = motif_matrix)
-
-  return(pwm)
+  return(motif)
 }
+

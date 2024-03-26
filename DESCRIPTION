@@ -8,8 +8,7 @@ Authors@R:
 	comment = c(ORCID = "0009-0006-6244-8670"))
 Description: The performance of a peak calling experiment can be evaluated by 
   comparing the locations of peaks and canonical motifs. This package calculates 
-  metrics to quantify the relationship between peaks and motifs, outputting
-  an HTML report with the results.
+  metrics to quantify the relationship between peaks and motifs.
 URL: https://github.com/Tomrrr1/MotifStats
 License: GPL (>= 3)
 Encoding: UTF-8
@@ -20,11 +19,10 @@ Imports:
   BSgenome,
   BSgenome.Hsapiens.UCSC.hg19,
   BSgenome.Hsapiens.UCSC.hg38,
-  GenomeInfoDb,
   GenomicRanges,
+  memes,
+  rGADEM,
   rtracklayer,
-  stats,
-  TFBSTools,
   universalmotif
 Suggests: 
   knitr,
@@ -34,5 +32,6 @@ Suggests:
   withr
 Config/testthat/edition: 3
 RoxygenNote: 7.3.1
+SystemRequirements: MEME Suite (>= v5.3.3)
 VignetteBuilder: knitr
 biocViews: MotifAnnotation, MotifDiscovery
