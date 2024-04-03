@@ -1,10 +1,9 @@
 #' Read motif file and convert to Position Weight Matrix (PWM)
 #'
 #' \code{read_motif_file()} reads a motif file and converts to a PWM. The
-#' function supports multiple motif formats, including "jaspar", "meme",
-#' "transfac" and "uniprobe".
+#' function supports multiple motif formats, including "homer", "jaspar",
+#' "meme", "transfac" and "uniprobe".
 #'
-#' @importFrom TFBSTools PWMatrix
 #' @import universalmotif
 #'
 #' @param motif_file Path to the motif file.
@@ -32,8 +31,6 @@ read_motif_file <- function(motif_file,
       "homer, jaspar, meme, transfac or uniprobe."
     )
   }
-
-  # Dynamically select and call the appropriate read function
   read_function <- read_functions[[file_format]]
   motif <- read_function(motif_file)
 

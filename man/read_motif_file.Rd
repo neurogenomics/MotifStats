@@ -19,6 +19,6 @@ A \code{universalmotif} motif object.
 }
 \description{
 \code{read_motif_file()} reads a motif file and converts to a PWM. The
-function supports multiple motif formats, including "jaspar", "meme",
-"transfac" and "uniprobe".
+function supports multiple motif formats, including "homer", "jaspar",
+"meme", "transfac" and "uniprobe".
 }

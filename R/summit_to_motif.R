@@ -9,6 +9,9 @@
 #' @importFrom memes runFimo
 #'
 #' @inheritParams peak_proportion
+#' @param out_dir Location to save the 0-order background file. By default, the
+#' background file will be written to a temporary directory.
+#' @inheritDotParams memes::runFimo -sequences -motifs -outdir -bfile
 #'
 #' @returns A list containing an expanded GRanges peak object with metadata
 #' columns relating to motif positions along with a vector of summit-to-motif
@@ -21,28 +24,37 @@
 #'
 #' summit_to_motif(
 #'   peak_input = peak_file,
-#'   pwm = creb_motif,
+#'   motif = creb_motif,
 #'   fp_rate = 5e-02,
 #'   genome_build = BSgenome.Hsapiens.UCSC.hg38::BSgenome.Hsapiens.UCSC.hg38,
 #')
 #'}
+#'
+#' @seealso \link[memes]{runAme}
 #' @export
 summit_to_motif <- function(peak_input,
                             motif,
                             fp_rate = 5e-02,
-                            genome_build) {
+                            genome_build,
+                            out_dir = tempdir(),
+                            ...) {
   peaks_and_seqs <- check_peak_input(peak_input = peak_input,
                                      genome_build = genome_build)
   peaks <- peaks_and_seqs[[1]] # 1st position of peaks_and_seqs vector
   peak_sequences <- peaks_and_seqs[[2]] # 2nd position of peaks_and_seqs vector
 
+  # Generate background model
+  bfile <- markov_background_model(sequences = peak_sequences,
+                                   out_dir = out_dir)
+  # p-value calculation for desired fp_rate
   fimo_threshold <- fp_rate / (2 * mean(GenomicRanges::width(peaks)))
   messager("The p-value threshold for motif scanning with FIMO is",
            fimo_threshold)
-  fimo_df <- memes::runFimo(peak_sequences,
+  fimo_df <- memes::runFimo(seqeunces = peak_sequences,
                             motifs = motif,
+                            bfile = bfile,
                             thresh = fimo_threshold,
-                            text = FALSE)
+                            ...)
   index_to_repeat <- base::match(as.vector(GenomicRanges::seqnames(fimo_df)),
                                  names(peaks))
   expanded_peaks <- peaks[index_to_repeat]
@@ -56,13 +68,10 @@ summit_to_motif <- function(peak_input,
   # Calculate motif centre and distance from centre to summit
   motif_centre <-
     (mcols(expanded_peaks)$motif_start + mcols(expanded_peaks)$motif_end) / 2
-  distance_to_summit <- abs(mcols(expanded_peaks)$summit - motif_centre)
+  distance_to_summit <- (mcols(expanded_peaks)$summit - motif_centre)
 
   mcols(expanded_peaks)$distance_to_summit <- distance_to_summit
 
   return(list(peak_set = expanded_peaks,
               distance_to_summit = distance_to_summit))
 }
-
-
-read_peak_file("CTCF_peaks.narrowPeak")

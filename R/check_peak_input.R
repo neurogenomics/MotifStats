@@ -1,7 +1,13 @@
-#' Helper function to check peak input
+#' Check that the peak input is valid
 #'
-#' \code{check_peak_input} confirms that the peak input is valid and returns a
-#' DNAStringSet object.
+#' \code{check_peak_input} confirms that the peak input is valid.
+#'
+#' @importFrom BSgenome getSeq
+#'
+#' @inheritParams peak_proportion
+#'
+#' @returns A list containing a GRanges peak object and a DNAStringSet sequence
+#' object.
 #'
 #' @keywords internal
 

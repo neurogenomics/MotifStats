@@ -16,6 +16,7 @@ LazyData: true
 Depends: 
   R (>= 4.2.0)
 Imports:
+  Biostrings,
   BSgenome,
   BSgenome.Hsapiens.UCSC.hg19,
   BSgenome.Hsapiens.UCSC.hg38,
