@@ -34,6 +34,6 @@ read_motif_file <- function(motif_file,
   read_function <- read_functions[[file_format]]
   motif <- read_function(motif_file)
 
-  return(motif)
+  return(motif) # return universalmotif object
 }
 

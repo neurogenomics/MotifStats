@@ -9,14 +9,16 @@
 #' @export
 density_plot <- function(distance_vec,
                          plot_title = NULL,
+                         x_label = NULL,
+                         y_label = NULL,
                          limits = c(-400, 400)){
   df <- as.data.frame(distance_vec)
   colnames(df) <- "dist"
 
   ggplot(df, aes(x = dist)) +
     geom_line(stat = "density", linetype = "solid", linewidth = 1) +
-    labs(x = "Distance to Summit (bp)",
-         y = "Density",
+    labs(x = x_label,
+         y = y_label,
          title = plot_title) +
     theme_minimal() +
     theme(plot.margin = margin(t = 0.5, r = 0.5, b = 0.5, l = 0.5, unit = "cm"),

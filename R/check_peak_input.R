@@ -10,7 +10,6 @@
 #' object.
 #'
 #' @keywords internal
-
 check_peak_input <- function(peak_input,
                              genome_build){
 

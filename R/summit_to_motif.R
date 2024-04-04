@@ -1,14 +1,22 @@
 #' Calculate the distance between peak summits and motifs
 #'
 #' \code{summit_to_motif()} calculates the distance between each motif and its
-#' nearest peak summit.
+#' nearest peak summit. \code{runFimo} from the \code{memes} package is used to
+#' recover the locations of each motif.
 #'
-#' This function is designed to work with MACS2/3 narrowPeak files.
+#' This function is designed to work with narrowPeak files from MACS2/3.
+#'
+#' To calculate the p-value threshold for a desired false-positive rate, we use
+#' the approximate formula:
+#' \deqn{p \approx \frac{fp\_rate}{2 \times \text{average peak width}}}
 #'
 #' @import GenomicRanges
 #' @importFrom memes runFimo
 #'
 #' @inheritParams peak_proportion
+#' @param fp_rate The desired false-positive rate. A p-value threshold will be
+#' selected based on this value. The default false-positive rate is
+#' 0.05.
 #' @param out_dir Location to save the 0-order background file. By default, the
 #' background file will be written to a temporary directory.
 #' @inheritDotParams memes::runFimo -sequences -motifs -outdir -bfile
@@ -19,15 +27,17 @@
 #'
 #' @examples
 #' \dontrun{
-#' pwm <-
-#'   read_motif_file(motif_file = "./MA0018.3.meme", file_format = "meme")
+#' data("creb_peaks", package = "MotifStats") # GRanges
+#' data("creb_motif", package = "MotifStats") # universalmotif
 #'
-#' summit_to_motif(
-#'   peak_input = peak_file,
+#' res <- summit_to_motif(
+#'   peak_input = creb_peaks,
 #'   motif = creb_motif,
 #'   fp_rate = 5e-02,
-#'   genome_build = BSgenome.Hsapiens.UCSC.hg38::BSgenome.Hsapiens.UCSC.hg38,
+#'   genome_build = BSgenome.Hsapiens.UCSC.hg38::BSgenome.Hsapiens.UCSC.hg38
 #')
+#'print(res)
+#'
 #'}
 #'
 #' @seealso \link[memes]{runAme}
@@ -50,7 +60,7 @@ summit_to_motif <- function(peak_input,
   fimo_threshold <- fp_rate / (2 * mean(GenomicRanges::width(peaks)))
   messager("The p-value threshold for motif scanning with FIMO is",
            fimo_threshold)
-  fimo_df <- memes::runFimo(seqeunces = peak_sequences,
+  fimo_df <- memes::runFimo(sequences = peak_sequences,
                             motifs = motif,
                             bfile = bfile,
                             thresh = fimo_threshold,
