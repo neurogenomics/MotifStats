@@ -6,9 +6,8 @@ Authors@R:
 	email = "tomroberts.work15@gmail.com", 
 	role = c("aut", "cre"),
 	comment = c(ORCID = "0009-0006-6244-8670"))
-Description: The performance of a peak calling experiment can be evaluated by 
-  comparing the locations of peaks and canonical motifs. This package calculates 
-  metrics to quantify the relationship between peaks and motifs.
+Description: This package calculates metrics to quantify the relationship 
+  between peaks and motifs.
 URL: https://github.com/Tomrrr1/MotifStats
 License: GPL (>= 3)
 Encoding: UTF-8
@@ -36,3 +35,4 @@ RoxygenNote: 7.3.1
 SystemRequirements: MEME Suite (>= v5.3.3)
 VignetteBuilder: knitr
 biocViews: MotifAnnotation, MotifDiscovery
+BugReports: https://github.com/Tomrrr1/MotifStats/issues

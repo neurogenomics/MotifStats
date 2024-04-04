@@ -40,7 +40,7 @@
 peak_proportion <- function(peak_input,
                             motif,
                             genome_build,
-                            out_dir = "./",
+                            out_dir = tempdir(),
                             ...) {
   peaks_and_seqs <- check_peak_input(peak_input = peak_input,
                                      genome_build = genome_build)

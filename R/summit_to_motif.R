@@ -37,7 +37,7 @@
 #'   genome_build = BSgenome.Hsapiens.UCSC.hg38::BSgenome.Hsapiens.UCSC.hg38
 #' )
 #' print(res)
-#'}
+#' }
 #'
 #' @seealso \link[memes]{runAme}
 #' @export

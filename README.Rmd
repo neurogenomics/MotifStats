@@ -6,3 +6,5 @@ output: github_document
 ---
 
 ## MotifStats
+
+`MotifStats` is an R package for calculating metrics that quantify the relationship between peaks and motifs.
