@@ -11,8 +11,10 @@ messager(..., v = TRUE)
 }
 \description{
 Conditionally print messages.
- Allows developers to easily control verbosity of functions,
- and meet Bioconductor requirements that dictate the message
- must first be stored to a variable before passing to \link[base]{message}.
+}
+\details{
+Allows developers to easily control verbosity of functions, and meet
+Bioconductor requirements that dictate the message must first be stored in a
+variable before passing to \link[base]{message}.
 }
 \keyword{internal}

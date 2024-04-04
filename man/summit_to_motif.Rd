@@ -87,7 +87,6 @@ res <- summit_to_motif(
   genome_build = BSgenome.Hsapiens.UCSC.hg38::BSgenome.Hsapiens.UCSC.hg38
 )
 print(res)
-
 }
 
 }

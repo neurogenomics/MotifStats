@@ -4,7 +4,13 @@
 \alias{density_plot}
 \title{Plot the positional distribution of motifs relative to peak summits}
 \usage{
-density_plot(distance_vec, plot_title = NULL, limits = c(-400, 400))
+density_plot(
+  distance_vec,
+  plot_title = NULL,
+  x_label = NULL,
+  y_label = NULL,
+  limits = c(-400, 400)
+)
 }
 \description{
 \code{density_plot} creates a density plot of the positional distribution

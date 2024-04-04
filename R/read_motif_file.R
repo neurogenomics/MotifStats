@@ -1,4 +1,4 @@
-#' Read motif file and convert to Position Weight Matrix (PWM)
+#' Read a motif file
 #'
 #' \code{read_motif_file()} reads a motif file and converts to a PWM. The
 #' function supports multiple motif formats, including "homer", "jaspar",
@@ -12,6 +12,17 @@
 #' The options are "homer", "jaspar", "meme", "transfac" and "uniprobe"
 #'
 #' @returns A \code{universalmotif} motif object.
+#'
+#' @examples
+#' \dontrun{
+#' motif_file <- system.file("extdata",
+#'                           "MA0018.5.jaspar",
+#'                           package = "MotifStats")
+#' res <- read_motif_file(motif_file = motif_file,
+#'                        motif_id = "CREB1",
+#'                        file_format = "jaspar")
+#' print(res)
+#'}
 #'
 #' @export
 read_motif_file <- function(motif_file,

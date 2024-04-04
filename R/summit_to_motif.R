@@ -35,9 +35,8 @@
 #'   motif = creb_motif,
 #'   fp_rate = 5e-02,
 #'   genome_build = BSgenome.Hsapiens.UCSC.hg38::BSgenome.Hsapiens.UCSC.hg38
-#')
-#'print(res)
-#'
+#' )
+#' print(res)
 #'}
 #'
 #' @seealso \link[memes]{runAme}

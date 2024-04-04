@@ -11,8 +11,8 @@ stopper(..., v = TRUE)
 }
 \description{
 Conditionally print stop messages.
-Allows developers to easily control verbosity of functions,
- and meet Bioconductor requirements that dictate the stop message
- must first be stored to a variable before passing to \link[base]{stop}.
+Allows developers to easily control verbosity of functions, and meet
+Bioconductor requirements that dictate the stop message must first be stored
+in a variable before passing to \link[base]{stop}.
 }
 \keyword{internal}
