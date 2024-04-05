@@ -30,8 +30,8 @@ jobs:
     steps:
     - name: Create .Renviron
       run: |
-        echo "MEME_BIN=/meme/bin/" >> .Renviron
-        ls -a
+        ls -a ~
+        echo "MEME_BIN=/meme/bin/" >> ~/.Renviron
     - uses: neurogenomics/rworkflows@master
       with:
         run_bioccheck: ${{ false }}
