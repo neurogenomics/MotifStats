@@ -13,3 +13,6 @@ Authors: <i>Thomas Roberts</i>
 </h4>
 
 ## MotifStats
+
+`MotifStats` is an R package for calculating metrics that quantify the
+relationship between peaks and motifs.

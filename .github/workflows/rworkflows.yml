@@ -25,18 +25,18 @@ jobs:
         - os: ubuntu-latest
           bioc: devel
           r: auto
-          cont: ghcr.io/bioconductor/bioconductor_docker:devel
+          cont: tomrrr1/bioconductor_with_meme:latest
           rspm: ~
-        - os: macOS-latest
-          bioc: release
-          r: auto
-          cont: ~
-          rspm: ~
-        - os: windows-latest
-          bioc: release
-          r: auto
-          cont: ~
-          rspm: ~
+        # - os: macOS-latest
+        #   bioc: release
+        #   r: auto
+        #   cont: ~
+        #   rspm: ~
+        # - os: windows-latest
+        #   bioc: release
+        #   r: auto
+        #   cont: ~
+        #   rspm: ~
     steps:
     - uses: neurogenomics/rworkflows@master
       with:
