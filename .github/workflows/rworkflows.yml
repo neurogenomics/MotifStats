@@ -27,23 +27,7 @@ jobs:
           r: auto
           cont: docker.io/tomrrr1/bioconductor_meme:latest
           rspm: ~
-        # - os: macOS-latest
-        #   bioc: release
-        #   r: auto
-        #   cont: ~
-        #   rspm: ~
-        # - os: windows-latest
-        #   bioc: release
-        #   r: auto
-        #   cont: ~
-        #   rspm: ~
     steps:
-    - name: Debug environment and meme path
-      run: |
-        echo "MEME_BIN=$MEME_BIN"
-        echo "PATH=$PATH"
-        ls -la $MEME_BIN
-        $MEME_BIN/fimo --version
     - uses: neurogenomics/rworkflows@master
       with:
         run_bioccheck: ${{ false }}
@@ -56,7 +40,7 @@ jobs:
         has_runit: ${{ false }}
         has_latex: ${{ false }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run_docker: ${{ false }}
+        run_docker: ${{ true }}
         DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
         runner_os: ${{ runner.os }}
         cache_version: cache-v1
