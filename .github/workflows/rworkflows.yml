@@ -28,9 +28,13 @@ jobs:
           cont: docker.io/tomrrr1/bioconductor_meme:latest
           rspm: ~
     steps:
-    - name: Set meme_bin
+    - name: Create symbolic link for MEME
       run: |
-        ls -a /github/workspace
+        mkdir -p /github/home
+        ln -s /meme/bin /github/home/meme/bin
+    - name: Verify symbolic link
+      run: |
+        ls -l /github/home/meme/bin
     - uses: neurogenomics/rworkflows@master
       with:
         run_bioccheck: ${{ false }}
