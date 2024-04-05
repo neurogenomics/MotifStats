@@ -38,10 +38,10 @@ jobs:
         #   cont: ~
         #   rspm: ~
     steps:
-    - name: Verify MEME installation
-      run: |
-        whereis meme
-        meme -version
+    # - name: Verify MEME installation
+    #   run: |
+    #     whereis meme
+    #     meme -version
     - uses: neurogenomics/rworkflows@master
       with:
         run_bioccheck: ${{ false }}
