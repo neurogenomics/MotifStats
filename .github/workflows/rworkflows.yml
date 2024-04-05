@@ -28,9 +28,10 @@ jobs:
           cont: docker.io/tomrrr1/bioconductor_meme:latest
           rspm: ~
     steps:
-    - name: Create symbolic link for MEME
+    - name: Create directory and symlink
       run: |
-        ln -s /meme/bin /github/home
+        mkdir -p /github/home/meme
+        ln -s /meme/bin /github/home/meme/bin
     - name: Verify symbolic link
       run: |
         ls -l /github/home/meme/bin
