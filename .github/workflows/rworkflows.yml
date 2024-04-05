@@ -30,8 +30,7 @@ jobs:
     steps:
     - name: Create symbolic link for MEME
       run: |
-        mkdir -p /github/home
-        ln -s /meme/bin /github/home/meme/bin
+        ln -s /meme/bin /github/home
     - name: Verify symbolic link
       run: |
         ls -l /github/home/meme/bin
