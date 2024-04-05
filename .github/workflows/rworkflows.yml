@@ -40,7 +40,7 @@ jobs:
     steps:
     - name: Verify MEME installation
       run: |
-        ls -l /github/home/
+        find / -name fimo 2>/dev/null
     - uses: neurogenomics/rworkflows@master
       with:
         run_bioccheck: ${{ false }}
