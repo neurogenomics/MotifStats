@@ -1,4 +1,4 @@
-#' Generate a 0-order Markov background. model
+#' Generate a 0-order Markov background model
 #'
 #' \code{markov_background_model()} generates a 0-order background model for use
 #' with FIMO or AME. The function uses the letter frequencies in the input
