@@ -30,7 +30,6 @@ jobs:
     steps:
     - name: Debug environment and meme path
       run: |
-        ls /github
         ls /github/home
     - uses: neurogenomics/rworkflows@master
       with:
