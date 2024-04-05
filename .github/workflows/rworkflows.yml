@@ -30,7 +30,8 @@ jobs:
     steps:
     - name: Debug environment and meme path
       run: |
-        ls /github/home
+        ls /
+        ls /meme
     - uses: neurogenomics/rworkflows@master
       with:
         run_bioccheck: ${{ false }}
