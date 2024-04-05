@@ -38,10 +38,12 @@ jobs:
         #   cont: ~
         #   rspm: ~
     steps:
-    # - name: Verify MEME installation
-    #   run: |
-    #     whereis meme
-    #     meme -version
+    - name: Debug environment and meme path
+      run: |
+        echo "MEME_BIN=$MEME_BIN"
+        echo "PATH=$PATH"
+        ls -la $MEME_BIN
+        $MEME_BIN/fimo --version
     - uses: neurogenomics/rworkflows@master
       with:
         run_bioccheck: ${{ false }}
