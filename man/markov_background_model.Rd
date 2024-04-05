@@ -17,6 +17,6 @@ The path to the 0-order background file.
 \description{
 \code{markov_background_model()} generates a 0-order background model for use
 with FIMO or AME. The function uses the letter frequencies in the input
-sequences to generate the model.
+sequences to generate the background model.
 }
 \keyword{internal}

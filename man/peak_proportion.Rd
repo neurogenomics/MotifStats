@@ -4,7 +4,7 @@
 \alias{peak_proportion}
 \title{Calculate motif enrichment in a set of sequences}
 \usage{
-peak_proportion(peak_input, motif, genome_build, out_dir = "./", ...)
+peak_proportion(peak_input, motif, genome_build, out_dir = tempdir(), ...)
 }
 \arguments{
 \item{peak_input}{Either a path to the narrowPeak file or a GRanges peak
