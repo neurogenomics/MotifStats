@@ -4,7 +4,7 @@
 #' background sequences using Analysis of Motif Enrichment (AME) from
 #' \link{memes}.
 #'
-#' @importFrom memes runFimo
+#' @importFrom memes runAme
 #' @import GenomicRanges
 #'
 #' @param peak_input Either a path to the narrowPeak file or a GRanges peak
