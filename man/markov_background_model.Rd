@@ -2,7 +2,7 @@
 % Please edit documentation in R/markov_background_model.R
 \name{markov_background_model}
 \alias{markov_background_model}
-\title{Generate a 0-order Markov background}
+\title{Generate a 0-order Markov background model}
 \usage{
 markov_background_model(sequences, out_dir)
 }
