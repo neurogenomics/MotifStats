@@ -20,6 +20,7 @@ Imports:
   BSgenome.Hsapiens.UCSC.hg19,
   BSgenome.Hsapiens.UCSC.hg38,
   GenomicRanges,
+  ggplot2,
   memes,
   rGADEM,
   rtracklayer,
