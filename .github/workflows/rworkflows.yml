@@ -40,6 +40,7 @@ jobs:
     steps:
     - name: Verify MEME installation
       run: |
+        whereis meme
         meme -version
     - uses: neurogenomics/rworkflows@master
       with:
