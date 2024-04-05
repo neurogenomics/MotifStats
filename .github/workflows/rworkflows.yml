@@ -28,11 +28,9 @@ jobs:
           cont: docker.io/tomrrr1/bioconductor_meme:latest
           rspm: ~
     steps:
-    - name: Set MEME_BIN directly and print
+    - name: Set meme_bin
       run: |
-        export MEME_BIN=/meme/bin/
-        echo $MEME_BIN
-        Rscript -e "Sys.setenv(MEME_BIN = Sys.getenv('MEME_BIN')); print(Sys.getenv('MEME_BIN'))"
+        ls -a /github/workspace
     - uses: neurogenomics/rworkflows@master
       with:
         run_bioccheck: ${{ false }}
