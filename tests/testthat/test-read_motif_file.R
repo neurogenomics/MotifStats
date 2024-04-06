@@ -1,7 +1,7 @@
 test_that("the output of read_motif_file is a universalmotif object", {
   motif_file <- system.file("extdata",
-                           "MA0018.5.jaspar",
-                           package = "MotifStats")
+                            "MA0018.5.jaspar",
+                            package = "MotifStats")
   res <- read_motif_file(motif_file = motif_file,
                          motif_id = "CREB1",
                          file_format = "jaspar")
