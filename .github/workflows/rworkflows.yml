@@ -28,13 +28,6 @@ jobs:
           cont: docker.io/tomrrr1/bioconductor_meme:latest
           rspm: ~
     steps:
-    # - name: Create directory and symlink
-    #   run: |
-    #     mkdir -p /github/home/meme
-    #     ln -s /meme/bin /github/home/meme/bin
-    # - name: Verify symbolic link
-    #   run: |
-    #     ls -l /github/home/meme/bin
     - name: Set MEME_BIN environment variable
       run: echo "MEME_BIN=/meme/bin" >> $GITHUB_ENV
     - name: Check MEME_BIN
@@ -51,7 +44,7 @@ jobs:
         has_runit: ${{ false }}
         has_latex: ${{ false }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run_docker: ${{ true }}
+        run_docker: ${{ false }}
         DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
         runner_os: ${{ runner.os }}
         cache_version: cache-v1
