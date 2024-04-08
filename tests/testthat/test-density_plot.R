@@ -11,7 +11,8 @@ test_that("the density_plot function outputs a ggplot", {
     out_dir = temp_dir,
     genome_build = BSgenome.Hsapiens.UCSC.hg38::BSgenome.Hsapiens.UCSC.hg38
   )
-  res <- density_plot(summit_to_motif_out$distance_to_summit)
+  res <- density_plot(
+    distance_vec = summit_to_motif_out$distance_to_summit)
 
   expect_true(is.ggplot(res))
 })

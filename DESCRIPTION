@@ -1,31 +1,31 @@
 Package: MotifStats
 Title: Uncover the relationship between peaks and motifs
 Version: 0.0.0.9000
-Authors@R: 
-  person(given = "Thomas", family = "Roberts", 
-	email = "tomroberts.work15@gmail.com", 
+Authors@R:
+  person(given = "Thomas", family = "Roberts",
+	email = "tomroberts.work15@gmail.com",
 	role = c("aut", "cre"),
 	comment = c(ORCID = "0009-0006-6244-8670"))
-Description: This package calculates metrics to quantify the relationship 
+Description: This package calculates metrics to quantify the relationship
   between peaks and motifs.
 URL: https://github.com/Tomrrr1/MotifStats
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
-Depends: 
+Depends:
   R (>= 4.2.0)
 Imports:
   Biostrings,
   BSgenome,
-  BSgenome.Hsapiens.UCSC.hg19,
-  BSgenome.Hsapiens.UCSC.hg38,
   GenomicRanges,
   ggplot2,
   memes,
   rGADEM,
   rtracklayer,
   universalmotif
-Suggests: 
+Suggests:
+  BSgenome.Hsapiens.UCSC.hg19,
+  BSgenome.Hsapiens.UCSC.hg38,
   knitr,
   rmarkdown,
   rworkflows,

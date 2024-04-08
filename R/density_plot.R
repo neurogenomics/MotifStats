@@ -5,6 +5,14 @@
 #'
 #' @import ggplot2
 #'
+#' @param distance_vec A vector of summit-to-motif distances. This is an
+#' output of the \code{summit_to_motif} function.
+#' @param plot_title Title for the density plot.
+#' @param x_label X-axis label.
+#' @param y_label Y-axis label.
+#' @param limits A vector of length 2 denoting the lower and upper bounds of the
+#' x-axis. The default is \code{c(-400, 400)}.
+#'
 #' @returns NULL
 #' @export
 density_plot <- function(distance_vec,
@@ -13,9 +21,9 @@ density_plot <- function(distance_vec,
                          y_label = NULL,
                          limits = c(-400, 400)){
   df <- as.data.frame(distance_vec)
-  colnames(df) <- "dist"
+  colnames(df) <- "distance"
 
-  ggplot(df, aes(x = dist)) +
+  ggplot(df, aes(x = distance)) +
     geom_line(stat = "density", linetype = "solid", linewidth = 1) +
     labs(x = x_label,
          y = y_label,

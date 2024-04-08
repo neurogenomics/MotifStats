@@ -12,6 +12,19 @@ density_plot(
   limits = c(-400, 400)
 )
 }
+\arguments{
+\item{distance_vec}{A vector of summit-to-motif distances. This is an
+output of the \code{summit_to_motif} function.}
+
+\item{plot_title}{Title for the density plot.}
+
+\item{x_label}{X-axis label.}
+
+\item{y_label}{Y-axis label.}
+
+\item{limits}{A vector of length 2 denoting the lower and upper bounds of the
+x-axis. The default is \code{c(-400, 400)}.}
+}
 \description{
 \code{density_plot} creates a density plot of the positional distribution
 of motifs within peaks.

@@ -1,7 +1,7 @@
 #' Perform de novo motif discovery
 #'
 #' \code{de_novo_motif()} is a wrapper of several de novo motif discovery
-#' methods, including Streme (meme suite), meme and rGADEM.
+#' methods, including Streme, meme and rGADEM.
 #'
 #' Streme is preferable over Meme, except when you have a small number of
 #' input sequences (< 50).
@@ -16,6 +16,8 @@
 #' q-value) and the remaining 0.9 peaks as the background. If you wish to
 #' supply your own control sequences, these must be passed as a DNAStringSet
 #' object.
+#' @param genome_build The genome build to use. The peak sequences will be
+#' extracted from this genome.
 #' @param ... Additional parameters to be passed to Streme, Meme or rGADEM. See
 #' the respective documentation for more details.
 #'
@@ -65,9 +67,9 @@ de_novo_motif <- function(peak_input,
 
   if (control == "weak_peaks") {
     top_index <- round(length(peaks) * 0.1)
-    ordered_peaks <- peaks[order(peaks$qValue, decreasing = TRUE), ]
-    top_peaks <- ordered_peaks[seq_len(top_index), ]
-    bottom_peaks <- ordered_peaks[!seq_len(top_index), ]
+    ordered_peaks <- peaks[order(peaks$qValue, decreasing = TRUE),]
+    top_peaks <- ordered_peaks[seq_len(top_index),]
+    bottom_peaks <- ordered_peaks[!seq_len(top_index),]
 
     input_peak_sequences <-
       BSgenome::getSeq(genome_build,
@@ -114,31 +116,3 @@ de_novo_motif <- function(peak_input,
 
   return(motifs)
 }
-
-# de_novo_motif(peak_file = peak_file)
-#
-# peak_file <- "./rep1_peaks.narrowPeak"
-# peaks <- read_peak_file(peak_file)
-# peak_sequences <-
-#    BSgenome::getSeq(BSgenome.Hsapiens.UCSC.hg38::BSgenome.Hsapiens.UCSC.hg38,
-#                     peaks)
-# #
-# #
-# # fa <- system.file("extdata/fasta_ex/fa1.fa", package = "memes")
-# # dreme_out <- memes::runDreme(fa, "shuffle", evalue = 39, outdir = tempdir())
-# # ?memes::runStreme()
-# #
-# # BiocManager::install("rGADEM")
-# # library(rGADEM)
-# # peak_file <- "./rep1_peaks.narrowPeak"
-# # peaks <- read_peak_file(peak_file)
-# # peak_sequences <-
-# #   BSgenome::getSeq(BSgenome.Hsapiens.UCSC.hg38::BSgenome.Hsapiens.UCSC.hg38,
-# #                    peaks)
-# # gad <- rGADEM::GADEM(Sequences = peak_sequences)
-# # rGADEM::getPWM(gad
-# # )
-#
-# ?memes::runStreme()
-
-

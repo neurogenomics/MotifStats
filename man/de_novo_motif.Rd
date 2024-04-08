@@ -20,6 +20,9 @@ object.}
 suite to be installed on your machine. You can find installation instructions
 here.}
 
+\item{genome_build}{The genome build to use. The peak sequences will be
+extracted from this genome.}
+
 \item{...}{Additional parameters to be passed to Streme, Meme or rGADEM. See
 the respective documentation for more details.}
 }
@@ -28,7 +31,7 @@ The output of either Streme, Meme or rGADEM.
 }
 \description{
 \code{de_novo_motif()} is a wrapper of several de novo motif discovery
-methods, including Streme (meme suite), meme and rGADEM.
+methods, including Streme, meme and rGADEM.
 }
 \details{
 Streme is preferable over Meme, except when you have a small number of
