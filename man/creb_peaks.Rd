@@ -5,7 +5,7 @@
 \alias{creb_peaks}
 \title{CREB Peaks}
 \format{
-A GRanges peak object outputted by \code{read_peak_file}
+A GRanges peak object outputted by the \code{read_peak_file}
 function.
 }
 \usage{

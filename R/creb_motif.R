@@ -4,5 +4,5 @@
 #'
 #' @format A universalmotif object produced by the \code{read_motif_file}
 #' function.
-#' @source JASPAR2024 \link{https://jaspar.elixir.no/matrix/MA0018.5/}
+#' @source JASPAR2024 \url{https://jaspar.elixir.no/matrix/MA0018.5/}
 "creb_motif"
