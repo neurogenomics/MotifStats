@@ -36,4 +36,4 @@ RoxygenNote: 7.3.1
 SystemRequirements: MEME Suite (>= v5.3.3)
 VignetteBuilder: knitr
 biocViews: MotifAnnotation, MotifDiscovery
-BugReports: https://github.com/Tomrrr1/MotifStats/issues
+BugReports: https://github.com/neurogenomics/MotifStats/issues
