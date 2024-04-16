@@ -12,9 +12,9 @@ function.
 JASPAR2024 \url{https://jaspar.elixir.no/matrix/MA0018.5/}
 }
 \usage{
-creb_motif
+data("creb_motif")
 }
 \description{
-This dataset contains the MA0018.5 CREB1 motif from JASPAR2024.
+The MA0018.5 CREB1 motif from JASPAR2024.
 }
 \keyword{datasets}
