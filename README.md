@@ -16,3 +16,18 @@ Authors: <i>Thomas Roberts</i>
 
 `MotifStats` is an R package for calculating metrics that quantify the
 relationship between peaks and motifs.
+
+## Installation
+
+`MotifStats` is available through GitHub. It can be installed using the
+following commands.
+
+``` r
+if(!require("remotes")) install.packages("remotes")
+remotes::install_github("neurogenomics/MotifStats")
+```
+
+`MotifStats` requires [MEME
+suite](https://meme-suite.org/meme/index.html) as a system dependency.
+Directions for installation can be found
+[here](https://www.bioconductor.org/packages/release/bioc/vignettes/memes/inst/doc/install_guide.html).
