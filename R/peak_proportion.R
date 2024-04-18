@@ -52,7 +52,7 @@ peak_proportion <- function(peak_input,
                                    out_dir = out_dir)
   ame_out <- memes::runAme(peak_sequences,
                            database = list(motif),
-                           outdir = "./")
+                           outdir = out_dir)
 
   return(
     list(
