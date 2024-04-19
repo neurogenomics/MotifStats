@@ -76,13 +76,302 @@
 
     
     
+<div class="section level2">
+<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h2>
+<p><code>MotifStats</code> is a simple R package to calculate the the
+metrics to quantify the relationship between peaks and motifs. It is
+based on <a href="https://meme-suite.org/meme/doc/ame.html" class="external-link">Analysis of
+Motif Enrichment (AME)</a> and <a href="https://meme-suite.org/meme/doc/fimo.html" class="external-link">Find Individual Motif
+Occurrences (FIMO)</a> from the <a href="https://meme-suite.org/meme/index.html" class="external-link">MEME suite</a>.</p>
+<p><br> It has two distinct functions:</p>
+<ol style="list-style-type: decimal">
+<li>Calculate motif enrichment motif enrichment relative to a set of
+background sequences using AME.</li>
+<li>Calculate the distance between each motif and its nearest peak
+summit, where each motif is identified using FIMO.</li>
+</ol>
+</div>
+<div class="section level2">
+<h2 id="data">Data<a class="anchor" aria-label="anchor" href="#data"></a>
+</h2>
+<p>The <code>MotifStats</code> package comes with motif and peak data
+for transcription factors CTCF and CREB1. Details of the files are as
+follows:</p>
+<ul>
+<li><p><strong>CREB1 TIP-seq peaks (narrowPeaks)</strong><a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> – <em>Data not
+publicly available</em></p></li>
+<li><p><strong>CTCF TIP-seq peaks (narrowPeaks)</strong><a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> – Retrieved from NCBI
+GEO under accession <a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE188512" class="external-link">GSE188512</a></p></li>
+<li><p><strong>CREB motif</strong> – Retrieved from JASPAR2024 under
+matrix ID <a href="http://jaspar.genereg.net/matrix/MA0018.5/" class="external-link">MA0018.5</a></p></li>
+<li><p><strong>CTCF motif</strong> – Retrieved from JASPAR2024 under
+matrix ID <a href="http://jaspar.genereg.net/matrix/MA1930.2/" class="external-link">MA1930.2</a></p></li>
+</ul>
+</div>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
+<p><code>MotifStats</code> relies on <a href="https://meme-suite.org/meme/index.html" class="external-link">MEME suite</a> as a system
+dependency. Directions for installation can be found <a href="https://www.bioconductor.org/packages/release/bioc/vignettes/memes/inst/doc/install_guide.html" class="external-link">here</a>.<br><br> To install the package, use the following command:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st"><a href="https://remotes.r-lib.org" class="external-link">"remotes"</a></span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"neurogenomics/MotifStats"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
+</h2>
+<p>In this example analysis, we will compare the enrichment of the CTCF
+motif in CTCF TIP-seq peaks relative to the background. We will also
+calculate the distance between the centre of each motif occurrence and
+its nearest peak summit.</p>
+<div class="section level3">
+<h3 id="load-packages">Load packages<a class="anchor" aria-label="anchor" href="#load-packages"></a>
+</h3>
+<p>Load the installed package.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Tomrrr1/MotifStats" class="external-link">MotifStats</a></span><span class="op">)</span></span></code></pre></div>
+<p>For this example, we will also load the
+<code>BSgenome.Hsapiens.UCSC.hg38</code> package to provide the genome
+build our peaks have been derived from.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">BSgenome.Hsapiens.UCSC.hg38</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="prepare-input-data">Prepare input data<a class="anchor" aria-label="anchor" href="#prepare-input-data"></a>
+</h3>
+<p>First, we need to load the motif and peak data. The motif data
+obtained from JASPAR can be loaded as follows:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">name_motif</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_motif_file.html">read_motif_file</a></span><span class="op">(</span></span>
+<span>  <span class="st">"/path/to/motfif/file.jaspar"</span>,</span>
+<span>  motif_id <span class="op">=</span> <span class="st">"id_of_motif"</span>,</span>
+<span>  file_format <span class="op">=</span> <span class="st">"jaspar"</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+<p>Next, we load the narrowPeak files from MACS2/3<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">name_peaks</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_peak_file.html">read_peak_file</a></span><span class="op">(</span><span class="st">"/path/to/peak/file.narrowPeak"</span><span class="op">)</span></span></code></pre></div>
+<p>For this example, we will load the built-in CTCF TIP-seq peaks (as
+<code>GRanges</code> object) and CREB motif (as <code>PWMatrix</code>
+object) data.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"ctcf_motif"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"ctcf_peaks"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="calculate-motif-enrichment">Calculate motif enrichment<a class="anchor" aria-label="anchor" href="#calculate-motif-enrichment"></a>
+</h3>
+<p>To calculate the motif relative to a set of background sequences, we
+use <code><a href="../reference/peak_proportion.html">peak_proportion()</a></code>.</p>
+<ul>
+<li>Under the hood, it calls <code>meme::runAme</code> for motif
+enrichment scoring. In context of this call, it identifies the
+occurrences of input motif in the input sequences compared with
+background sequences and outputs relevant statistics.</li>
+<li>A 0-order background model with the same nucleotide composition as
+the input sequences is generated for comparison.</li>
+<li>An additional <code>out_dir</code> argument can be used to specify
+the directory to save the AME output files<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a> and the background
+model.</li>
+</ul>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">ctcf_read_prop</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/peak_proportion.html">peak_proportion</a></span><span class="op">(</span></span>
+<span>  peak_input <span class="op">=</span> <span class="va">ctcf_peaks</span>,</span>
+<span>  motif <span class="op">=</span> <span class="va">ctcf_motif</span>,</span>
+<span>  genome_build <span class="op">=</span> <span class="fu">BSgenome.Hsapiens.UCSC.hg38</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/BSgenome.Hsapiens.UCSC.hg38/man/package.html" class="external-link">BSgenome.Hsapiens.UCSC.hg38</a></span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; Generating a 0-order background model</span></span>
+<span><span class="co">#&gt; Background model saved to /tmp/Rtmpn7GJLb/background_model.txt</span></span></code></pre></div>
+<p><code>ctcf_read_prop</code> is a list with two components:<br>
+1. <code>$tp</code> (True positives) with the number of true positive
+motif occurrences in the given sequence followed by its relative
+percentage.<br>
+1. <code>$fp</code> (False positives) with the number of false positive
+motif occurrences in the given sequence followed by its relative
+percentage.</p>
+<p>In context of this function, the true positives represent to the
+number/percentage of peaks with an associated motif occurrence, while
+the false positives represent the number/percentage of peaks without an
+associated motif occurrence.</p>
+</div>
+<div class="section level3">
+<h3 id="find-motif-summit-distances">Find motif-summit distances<a class="anchor" aria-label="anchor" href="#find-motif-summit-distances"></a>
+</h3>
+<p>To calculate the distance between each motif and its nearest peak
+summit, we use <code><a href="../reference/summit_to_motif.html">summit_to_motif()</a></code>.</p>
+<ul>
+<li>
+<code>fp_rate</code> argument specifies the desired false-positive
+rate for FIMO. A p-value is calculated using the formula:<br><span class="math display">\[p = \frac{\text{fp_rate}}{2 *
+\text{promoter_length}}\]</span><br>
+</li>
+<li>A 0-order background model with the same nucleotide composition as
+the input sequences is generated for comparison.<br>
+</li>
+<li>An additional <code>out_dir</code> argument can be used to specify
+the directory to save the 0-order background file.</li>
+</ul>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">ctcf_read_sum_motif</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/summit_to_motif.html">summit_to_motif</a></span><span class="op">(</span></span>
+<span>  peak_input <span class="op">=</span> <span class="va">ctcf_peaks</span>,</span>
+<span>  motif <span class="op">=</span> <span class="va">ctcf_motif</span>,</span>
+<span>  fp_rate <span class="op">=</span> <span class="fl">0.05</span>,</span>
+<span>  genome_build <span class="op">=</span> <span class="fu">BSgenome.Hsapiens.UCSC.hg38</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/BSgenome.Hsapiens.UCSC.hg38/man/package.html" class="external-link">BSgenome.Hsapiens.UCSC.hg38</a></span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; Generating a 0-order background model</span></span>
+<span><span class="co">#&gt; Background model saved to /tmp/Rtmpn7GJLb/background_model.txt</span></span>
+<span><span class="co">#&gt; The p-value threshold for motif scanning with FIMO is 0.000102758130701511</span></span></code></pre></div>
+<p><code>ctcf_read_sum_motif</code> is a list with two objects:<br>
+1. <code>peak_set</code> with peak information, as a
+<code>GRanges</code> object.<br>
+2. <code>distance_to_summit</code> with distances between the centre of
+each motif and its nearest peak summit.</p>
+<p><strong>NOTE</strong>: When a motif is found multiple times within a
+single peak, the <code>peak_set</code> and
+<code>distance_to_summit</code> objects will contain multiple entries
+(rows) corresponding to the same peak. Each of these entries represents
+a distinct occurrence of the motif within that peak.</p>
+<div class="section level4">
+<h4 id="visualize-results">Visualize results<a class="anchor" aria-label="anchor" href="#visualize-results"></a>
+</h4>
+<p>We can optionally visualize the distribution of distances by using
+<code><a href="../reference/density_plot.html">density_plot()</a></code>.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/density_plot.html">density_plot</a></span><span class="op">(</span></span>
+<span>  <span class="va">ctcf_read_sum_motif</span><span class="op">$</span><span class="va">distance_to_summit</span>,</span>
+<span>  plot_title <span class="op">=</span> <span class="st">"CTCF motif distance to summit"</span>,</span>
+<span>  x_label <span class="op">=</span> <span class="st">"Distance to summit (bp)"</span>,</span>
+<span>  y_label <span class="op">=</span> <span class="st">"Density"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p><img src="MotifStats_files/figure-html/unnamed-chunk-10-1.png" width="672"></p>
+<p>For this given example, we can observe the distribution of distances
+between the centre of each motif, and its nearest peak summit follows a
+normal distribution. With a mean of the distribution around 0 base pairs
+(bp), we can infer that the motif is likely to be located at the peak
+summit, suggesting that the identified peak summits are associated with
+binding of regulatory proteins.</p>
+<blockquote>
+<p><strong>NOTE:</strong> Since AME and FIMO accept different parameters
+and are calculated independently, it is not possible to obtain directly
+comparable results.</p>
+</blockquote>
+</div>
+</div>
+</div>
+<div class="section level2">
+<h2 id="future-enchancements">Future Enchancements<a class="anchor" aria-label="anchor" href="#future-enchancements"></a>
+</h2>
+<ul>
+<li>Calculate metrics for more than one motif at a time.</li>
+</ul>
+</div>
+<div class="section level2">
+<h2 id="session-info">Session Info<a class="anchor" aria-label="anchor" href="#session-info"></a>
+</h2>
+<details><pre><code><span><span class="co">#&gt; R Under development (unstable) (2024-03-28 r86224)</span></span>
+<span><span class="co">#&gt; Platform: x86_64-pc-linux-gnu</span></span>
+<span><span class="co">#&gt; Running under: Ubuntu 22.04.4 LTS</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Matrix products: default</span></span>
+<span><span class="co">#&gt; BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 </span></span>
+<span><span class="co">#&gt; LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.20.so;  LAPACK version 3.10.0</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; locale:</span></span>
+<span><span class="co">#&gt;  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              </span></span>
+<span><span class="co">#&gt;  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    </span></span>
+<span><span class="co">#&gt;  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   </span></span>
+<span><span class="co">#&gt;  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 </span></span>
+<span><span class="co">#&gt;  [9] LC_ADDRESS=C               LC_TELEPHONE=C            </span></span>
+<span><span class="co">#&gt; [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; time zone: UTC</span></span>
+<span><span class="co">#&gt; tzcode source: system (glibc)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; attached base packages:</span></span>
+<span><span class="co">#&gt; [1] stats4    stats     graphics  grDevices utils     datasets  methods  </span></span>
+<span><span class="co">#&gt; [8] base     </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; other attached packages:</span></span>
+<span><span class="co">#&gt;  [1] BSgenome.Hsapiens.UCSC.hg38_1.4.5 BSgenome_1.71.4                  </span></span>
+<span><span class="co">#&gt;  [3] rtracklayer_1.63.2                BiocIO_1.13.0                    </span></span>
+<span><span class="co">#&gt;  [5] Biostrings_2.71.5                 XVector_0.43.1                   </span></span>
+<span><span class="co">#&gt;  [7] GenomicRanges_1.55.4              GenomeInfoDb_1.39.13             </span></span>
+<span><span class="co">#&gt;  [9] IRanges_2.37.1                    S4Vectors_0.41.6                 </span></span>
+<span><span class="co">#&gt; [11] BiocGenerics_0.49.1               MotifStats_0.0.0.9000            </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
+<span><span class="co">#&gt;  [1] tidyselect_1.2.1            farver_2.1.1               </span></span>
+<span><span class="co">#&gt;  [3] dplyr_1.1.4                 R.utils_2.12.3             </span></span>
+<span><span class="co">#&gt;  [5] bitops_1.0-7                fastmap_1.1.1              </span></span>
+<span><span class="co">#&gt;  [7] RCurl_1.98-1.14             GenomicAlignments_1.39.5   </span></span>
+<span><span class="co">#&gt;  [9] XML_3.99-0.16.1             digest_0.6.35              </span></span>
+<span><span class="co">#&gt; [11] lifecycle_1.0.4             waldo_0.5.2                </span></span>
+<span><span class="co">#&gt; [13] processx_3.8.4              magrittr_2.0.3             </span></span>
+<span><span class="co">#&gt; [15] compiler_4.5.0              rlang_1.1.3                </span></span>
+<span><span class="co">#&gt; [17] sass_0.4.9                  tools_4.5.0                </span></span>
+<span><span class="co">#&gt; [19] utf8_1.2.4                  yaml_2.3.8                 </span></span>
+<span><span class="co">#&gt; [21] knitr_1.46                  labeling_0.4.3             </span></span>
+<span><span class="co">#&gt; [23] S4Arrays_1.3.7              htmlwidgets_1.6.4          </span></span>
+<span><span class="co">#&gt; [25] bit_4.0.5                   curl_5.2.1                 </span></span>
+<span><span class="co">#&gt; [27] DelayedArray_0.29.9         pkgload_1.3.4              </span></span>
+<span><span class="co">#&gt; [29] abind_1.4-5                 BiocParallel_1.37.1        </span></span>
+<span><span class="co">#&gt; [31] withr_3.0.0                 purrr_1.0.2                </span></span>
+<span><span class="co">#&gt; [33] R.oo_1.26.0                 desc_1.4.3                 </span></span>
+<span><span class="co">#&gt; [35] grid_4.5.0                  fansi_1.0.6                </span></span>
+<span><span class="co">#&gt; [37] colorspace_2.1-0            ggplot2_3.5.0              </span></span>
+<span><span class="co">#&gt; [39] scales_1.3.0                MASS_7.3-60.2              </span></span>
+<span><span class="co">#&gt; [41] SummarizedExperiment_1.33.3 cli_3.6.2                  </span></span>
+<span><span class="co">#&gt; [43] cmdfun_1.0.2                rmarkdown_2.26             </span></span>
+<span><span class="co">#&gt; [45] crayon_1.5.2                ragg_1.3.0                 </span></span>
+<span><span class="co">#&gt; [47] generics_0.1.3              httr_1.4.7                 </span></span>
+<span><span class="co">#&gt; [49] tzdb_0.4.0                  rjson_0.2.21               </span></span>
+<span><span class="co">#&gt; [51] cachem_1.0.8                zlibbioc_1.49.3            </span></span>
+<span><span class="co">#&gt; [53] ggseqlogo_0.2               parallel_4.5.0             </span></span>
+<span><span class="co">#&gt; [55] restfulr_0.0.15             universalmotif_1.21.4      </span></span>
+<span><span class="co">#&gt; [57] matrixStats_1.3.0           vctrs_0.6.5                </span></span>
+<span><span class="co">#&gt; [59] Matrix_1.7-0                jsonlite_1.8.8             </span></span>
+<span><span class="co">#&gt; [61] hms_1.1.3                   bit64_4.0.5                </span></span>
+<span><span class="co">#&gt; [63] systemfonts_1.0.6           testthat_3.2.1.1           </span></span>
+<span><span class="co">#&gt; [65] jquerylib_0.1.4             tidyr_1.3.1                </span></span>
+<span><span class="co">#&gt; [67] glue_1.7.0                  pkgdown_2.0.9              </span></span>
+<span><span class="co">#&gt; [69] ps_1.7.6                    memes_1.11.0               </span></span>
+<span><span class="co">#&gt; [71] codetools_0.2-19            gtable_0.3.4               </span></span>
+<span><span class="co">#&gt; [73] UCSC.utils_0.99.5           munsell_0.5.1              </span></span>
+<span><span class="co">#&gt; [75] tibble_3.2.1                pillar_1.9.0               </span></span>
+<span><span class="co">#&gt; [77] htmltools_0.5.8.1           brio_1.1.4                 </span></span>
+<span><span class="co">#&gt; [79] GenomeInfoDbData_1.2.12     R6_2.5.1                   </span></span>
+<span><span class="co">#&gt; [81] textshaping_0.3.7           rprojroot_2.0.4            </span></span>
+<span><span class="co">#&gt; [83] vroom_1.6.5                 evaluate_0.23              </span></span>
+<span><span class="co">#&gt; [85] Biobase_2.63.1              lattice_0.22-6             </span></span>
+<span><span class="co">#&gt; [87] highr_0.10                  readr_2.1.5                </span></span>
+<span><span class="co">#&gt; [89] R.methodsS3_1.8.2           Rsamtools_2.19.4           </span></span>
+<span><span class="co">#&gt; [91] memoise_2.0.1               bslib_0.7.0                </span></span>
+<span><span class="co">#&gt; [93] Rcpp_1.0.12                 SparseArray_1.3.5          </span></span>
+<span><span class="co">#&gt; [95] xfun_0.43                   fs_1.6.3                   </span></span>
+<span><span class="co">#&gt; [97] MatrixGenerics_1.15.0       pkgconfig_2.0.3</span></span></code></pre>
+</details><!-- Footnotes -->
+</div>
+<div class="footnotes footnotes-end-of-document">
+<hr>
+<ol>
+<li id="fn1"><p>The peak file is a subset of chromosome 19 to reduce the
+size of the built-in data.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn2"><p>The peak file is a subset of chromosome 19 to reduce the
+size of the built-in data.<a href="#fnref2" class="footnote-back">↩︎</a></p></li>
+<li id="fn3"><p>narrowPeak files from both version 2 and 3 of <a href="https://github.com/macs3-project/MACS" class="external-link">MACS: Model-based Analysis
+for ChIP-Seq</a> is supported.<a href="#fnref3" class="footnote-back">↩︎</a></p></li>
+<li id="fn4"><p>For more information on the output files, refer to the
+<a href="https://meme-suite.org/meme/doc/ame.html" class="external-link">AME
+documentation</a>.<a href="#fnref4" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-      </div>
+        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
+    </nav>
+</div>
 
 </div>
 
@@ -95,7 +384,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.8.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.</p>
 </div>
 
       </footer>
