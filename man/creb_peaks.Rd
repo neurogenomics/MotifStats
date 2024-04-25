@@ -14,7 +14,7 @@ data("creb_peaks")
 \description{
 A set of CREB1 TIP-seq peaks (narrowPeak) produced by MACS3 (first-mate only,
 5'-shift to centre the 5' end of each read). The BAM file used as input for
-the peak calling is not available publicly. The peak file has been subset
+the peak calling is not publicly available. The peak file has been subset
 to reduce the data size (only chromosome 19).
 }
 \details{

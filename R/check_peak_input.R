@@ -4,7 +4,7 @@
 #'
 #' @importFrom BSgenome getSeq
 #'
-#' @inheritParams peak_proportion
+#' @inheritParams motif_enrichment
 #'
 #' @returns A list containing a GRanges peak object and a DNAStringSet sequence
 #' object.

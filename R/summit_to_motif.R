@@ -13,7 +13,7 @@
 #' @import GenomicRanges
 #' @importFrom memes runFimo
 #'
-#' @inheritParams peak_proportion
+#' @inheritParams motif_enrichment
 #' @param fp_rate The desired false-positive rate. A p-value threshold will be
 #' selected based on this value. The default false-positive rate is
 #' 0.05.

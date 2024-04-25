@@ -2,7 +2,7 @@
 
 export(de_novo_motif)
 export(density_plot)
-export(peak_proportion)
+export(motif_enrichment)
 export(read_motif_file)
 export(read_peak_file)
 export(summit_to_motif)

@@ -1,6 +1,6 @@
 #' Calculate motif enrichment in a set of sequences
 #'
-#' \code{peak_proportion()} calculates motif enrichment relative to a set of
+#' \code{motif_enrichment()} calculates motif enrichment relative to a set of
 #' background sequences using Analysis of Motif Enrichment (AME) from
 #' \link{memes}.
 #'
@@ -27,7 +27,7 @@
 #'                          )
 #' data("creb_motif", package = "MotifStats")
 #'
-#' peak_proportion(
+#' motif_enrichment(
 #'   peak_input = peak_file,
 #'   motif = creb_motif,
 #'   genome_build = BSgenome.Hsapiens.UCSC.hg38::BSgenome.Hsapiens.UCSC.hg38,
@@ -37,11 +37,11 @@
 #'
 #' @seealso \link[memes]{runAme}
 #' @export
-peak_proportion <- function(peak_input,
-                            motif,
-                            genome_build,
-                            out_dir = tempdir(),
-                            ...) {
+motif_enrichment <- function(peak_input,
+                             motif,
+                             genome_build,
+                             out_dir = tempdir(),
+                             ...) {
   peaks_and_seqs <- check_peak_input(peak_input = peak_input,
                                      genome_build = genome_build)
   peaks <- peaks_and_seqs[[1]] # 1st position of peaks_and_seqs vector
@@ -54,10 +54,14 @@ peak_proportion <- function(peak_input,
                            database = list(motif),
                            outdir = "./")
 
+  seq <- read.table("sequences.tsv", header = TRUE)
+  cleaned_ids <- seq$seq_ID[!grepl("_shuf_1", seq$seq_ID)]
+
   return(
     list(
       tp = c(ame_out$tp, ame_out$tp_percent),
-      fp = c(ame_out$fp, ame_out$fp_percent)
+      fp = c(ame_out$fp, ame_out$fp_percent),
+      positive_peaks = peaks[cleaned_ids]
     )
   )
 }
