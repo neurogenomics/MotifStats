@@ -31,7 +31,9 @@ sequences using AME.
 2. Calculate the distance between each motif and its nearest peak summit, where
 each motif is identified using FIMO.
 
+
 ## Data
+
 The `MotifStats` package comes with motif and peak data for transcription
 factors CTCF and CREB1. Details of the files are as follows:
 
@@ -53,7 +55,8 @@ accession
 
 
 ## Installation
-`MotifMarker` relies on [MEME suite](https://meme-suite.org/meme/index.html) as
+
+`MotifStats` relies on [MEME suite](https://meme-suite.org/meme/index.html) as
 a system dependency. Directions for installation can be found [here](https://www.bioconductor.org/packages/release/bioc/vignettes/memes/inst/doc/install_guide.html).  
 <br>
 To install the package, use the following command:  
@@ -64,26 +67,32 @@ remotes::install_github("neurogenomics/MotifStats")
 
 
 ## Usage
-In this example analysis, we will compare the enrichment of the CREB motif in
+
+In this example analysis, we will compare the enrichment of the CTCF motif in
 CTCF TIP-seq peaks relative to the background. We will also calculate the
-distance between the centre of each CTCF motif and its nearest peak summit.
+distance between the centre of each motif occurrence and its nearest peak
+summit.
+
 
 ### Load packages
+
 Load the installed package.
-```{r include  = FALSE}
+```{r include = TRUE, message = FALSE, warning = FALSE}
 library(MotifStats)
 ```
 
 For this example, we will also load the `BSgenome.Hsapiens.UCSC.hg38` package to
 provide the genome build our peaks have been derived from.
-```{r include  = FALSE}
+```{r include = TRUE, message = FALSE, warning = FALSE}
 library(BSgenome.Hsapiens.UCSC.hg38)
 ```
 
+
 ### Prepare input data
+
 First, we need to load the motif and peak data. The motif data obtained from
 JASPAR can be loaded as follows:
-```{r eval  = FALSE}
+```{r eval = FALSE}
 name_motif <- read_motif_file(
   "/path/to/motfif/file.jaspar",
   motif_id = "id_of_motif",
@@ -91,24 +100,32 @@ name_motif <- read_motif_file(
   )
 ```
 
-Next, we load the narrowPeak files from MACS2/3.
-```{r eval  = FALSE}
+Next, we load the narrowPeak files from MACS2/3[^f2].
+```{r eval = FALSE}
 name_peaks <- read_peak_file("/path/to/peak/file.narrowPeak")
 ```
 
-For this example, we will load the built-in CREB1 TIP-seq peaks (as `GRanges`
+For this example, we will load the built-in CTCF TIP-seq peaks (as `GRanges`
 object) and CREB motif (as `PWMatrix` object) data.
 ```{r include  = TRUE}
 data("ctcf_motif")
 data("ctcf_peaks")
 ```
 
-### Calculate motif enrichment
-To calculate the motif relative to a set of background sequences, we use
-`peak_proportion()`.  
 
+### Calculate motif enrichment
+
+To calculate the motif relative to a set of background sequences, we use
+`peak_proportion()`.
+
+- Under the hood, it calls `meme::runAme` for motif
+enrichment scoring. In context of this call, it identifies the occurrences of
+input motif in the input sequences compared with background sequences and
+outputs relevant statistics.
+- A 0-order background model with the same nucleotide composition as the input
+sequences is generated for comparison.
 - An additional `out_dir` argument can be used to specify the
-directory to save the AME output files[^f2].  
+directory to save the AME output files[^f3] and the background model.  
 
 ```{r include  = TRUE}
 ctcf_read_prop <- peak_proportion(
@@ -118,20 +135,29 @@ ctcf_read_prop <- peak_proportion(
 )
 ```
 
-`ctcf_read_prob` is a list with two components:  
+`ctcf_read_prop` is a list with two components:  
 1. `$tp` (True positives) with the number of true positive motif occurrences in
 the given sequence followed by its relative percentage.  
 1. `$fp` (False positives) with the number of false positive motif occurrences
 in the given sequence followed by its relative percentage.  
 
+In context of this function, the true positives represent to the
+number/percentage of peaks with an associated motif occurrence, while the false
+positives represent the number/percentage of peaks without an associated motif
+occurrence.  
+
+
 
 ### Find motif-summit distances
+
 To calculate the distance between each motif and its nearest peak summit, we use
 `summit_to_motif()`.  
 
 - `fp_rate` argument specifies the desired false-positive rate for FIMO. A
 p-value is calculated using the formula:  
 $$p = \frac{\text{fp_rate}}{2 * \text{promoter_length}}$$  
+- A 0-order background model with the same nucleotide composition as the input
+sequences is generated for comparison.  
 - An additional `out_dir` argument can be used to specify the
 directory to save the 0-order background file.  
 
@@ -145,13 +171,19 @@ ctcf_read_sum_motif <- summit_to_motif(
 ```
 
 `ctcf_read_sum_motif` is a list with two objects:  
-1. `peak_set` with peak information.  
+1. `peak_set` with peak information, as a `GRanges` object.  
 2. `distance_to_summit` with distances between the centre of each motif and its
 nearest peak summit.  
 
+**NOTE**: When a motif is found multiple times within a single peak, the
+`peak_set` and `distance_to_summit` objects will contain multiple entries (rows)
+corresponding to the same peak. Each of these entries represents a distinct
+occurrence of the motif within that peak.
 
 #### Visualize results
-We can optionally visualize the distribution of distances by using `density_plot()`.
+
+We can optionally visualize the distribution of distances by using
+`density_plot()`.
 ```{r include  = TRUE, fig.width = 7, fig.height = 4}
 density_plot(
   ctcf_read_sum_motif$distance_to_summit,
@@ -161,12 +193,19 @@ density_plot(
 )
 ```
 
+For this given example, we can observe the distribution of distances between the
+centre of each motif, and its nearest peak summit follows a normal distribution.
+With a mean of the distribution around 0 base pairs (bp), we can infer that the
+motif is likely to be located at the peak summit, suggesting that the identified
+peak summits are associated with binding of regulatory proteins.
+
 
 > **NOTE:** Since AME and FIMO accept different parameters and are calculated
 independently, it is not possible to obtain directly comparable results.
 
 
 ## Future Enchancements
+
 - Calculate metrics for more than one motif at a time.  
 
 
@@ -180,8 +219,11 @@ sessionInfo()
 
 </details>
 
+
 <!-- Footnotes -->
 [^f1]: The peak file is a subset of chromosome 19 to reduce the size of the
 built-in data.
-[^f2]: For more information on the output files, refer to the
+[^f2]: narrowPeak files from both version 2 and 3 of [MACS: Model-based Analysis
+for ChIP-Seq](https://github.com/macs3-project/MACS) is supported.
+[^f3]: For more information on the output files, refer to the
 [AME documentation](https://meme-suite.org/meme/doc/ame.html).

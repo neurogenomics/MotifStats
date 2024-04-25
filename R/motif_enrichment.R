@@ -52,7 +52,7 @@ motif_enrichment <- function(peak_input,
                                    out_dir = out_dir)
   ame_out <- memes::runAme(peak_sequences,
                            database = list(motif),
-                           outdir = "./")
+                           outdir = out_dir)
 
   seq <- read.table("sequences.tsv", header = TRUE)
   cleaned_ids <- seq$seq_ID[!grepl("_shuf_1", seq$seq_ID)]
