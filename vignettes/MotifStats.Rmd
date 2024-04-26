@@ -17,19 +17,18 @@ knitr::opts_chunk$set(
 
 ## Introduction
 
-`MotifStats` is a simple R package to calculate the the metrics to quantify the
-relationship between peaks and motifs. It is based on [Analysis of Motif
+`MotifStats` is a simple R package to calculate metrics to quantify the
+relationship between peaks and motifs. It uses [Analysis of Motif
 Enrichment (AME)](https://meme-suite.org/meme/doc/ame.html) and [Find Individual
 Motif Occurrences (FIMO)](https://meme-suite.org/meme/doc/fimo.html) from the
 [MEME suite](https://meme-suite.org/meme/index.html).  
 
 <br>
-It has two distinct functions:
+The package has two distinct functions:
 
-1. Calculate motif enrichment motif enrichment relative to a set of background
-sequences using AME.
-2. Calculate the distance between each motif and its nearest peak summit, where
-each motif is identified using FIMO.
+1. Calculate the enrichment of a given motif in a set of peaks using AME
+2. Calculate the distance between each motif and its nearest peak summit. FIMO
+is used to recover the locations of each motif.
 
 
 ## Data
@@ -59,25 +58,25 @@ accession
 `MotifStats` relies on [MEME suite](https://meme-suite.org/meme/index.html) as
 a system dependency. Directions for installation can be found [here](https://www.bioconductor.org/packages/release/bioc/vignettes/memes/inst/doc/install_guide.html).  
 <br>
-To install the package, use the following command:  
-```{r eval = FALSE}
-if(!require("remotes")) install.packages("remotes")
+To install the package, run the following command:  
+```R
+if(!require("remotes")) 
+  install.packages("remotes")
 remotes::install_github("neurogenomics/MotifStats")
 ```
 
 
 ## Usage
 
-In this example analysis, we will compare the enrichment of the CTCF motif in
-CTCF TIP-seq peaks relative to the background. We will also calculate the
-distance between the centre of each motif occurrence and its nearest peak
-summit.
+In this example analysis, we will examine the relationship between the CTCF 
+motif and CTCF peaks. This includes calculating enrichment of motifs in peaks
+and the distances between motifs and peak summits.
 
 
 ### Load packages
 
 Load the installed package.
-```{r include = TRUE, message = FALSE, warning = FALSE}
+```{r setup_vignette}
 library(MotifStats)
 ```
 
@@ -116,39 +115,35 @@ data("ctcf_peaks")
 ### Calculate motif enrichment
 
 To calculate the motif relative to a set of background sequences, we use
-`peak_proportion()`.
+`motif_enrichment()`.
 
-- Under the hood, it calls `meme::runAme` for motif
-enrichment scoring. In context of this call, it identifies the occurrences of
-input motif in the input sequences compared with background sequences and
-outputs relevant statistics.
+- Under the hood, it calls `meme::runAme` from the MEME suite. This function 
+calculates the enrichment of the input motif in a set of target sequences
+relative to a set of background sequences.
 - A 0-order background model with the same nucleotide composition as the input
-sequences is generated for comparison.
+sequences is used to generate the background sequences. 
 - An additional `out_dir` argument can be used to specify the
 directory to save the AME output files[^f3] and the background model.  
 
 ```{r include  = TRUE}
-ctcf_read_prop <- peak_proportion(
+ctcf_read_prop <- motif_enrichment(
   peak_input = ctcf_peaks,
   motif = ctcf_motif,
-  genome_build = BSgenome.Hsapiens.UCSC.hg38::BSgenome.Hsapiens.UCSC.hg38
+  genome_build = BSgenome.Hsapiens.UCSC.hg38::BSgenome.Hsapiens.UCSC.hg38,
+  out_dir = "."
 )
 ```
 
-`ctcf_read_prop` is a list with two components:  
-1. `$tp` (True positives) with the number of true positive motif occurrences in
-the given sequence followed by its relative percentage.  
-1. `$fp` (False positives) with the number of false positive motif occurrences
-in the given sequence followed by its relative percentage.  
+`ctcf_read_prop` is a list of length 3. 
 
-In context of this function, the true positives represent to the
-number/percentage of peaks with an associated motif occurrence, while the false
-positives represent the number/percentage of peaks without an associated motif
-occurrence.  
+- `$tp` (True positives) refers to the proportion of peaks that contain the 
+motif.
+- `$fp` (False positives) refers to the proportion of background sequences that
+contain the motif.
+- `$positive_peaks` A filtered peak set containing only those peaks that have 
+the motif.
 
-
-
-### Find motif-summit distances
+### Calculate motif-summit distances
 
 To calculate the distance between each motif and its nearest peak summit, we use
 `summit_to_motif()`.  
@@ -170,19 +165,20 @@ ctcf_read_sum_motif <- summit_to_motif(
 )
 ```
 
-`ctcf_read_sum_motif` is a list with two objects:  
-1. `peak_set` with peak information, as a `GRanges` object.  
-2. `distance_to_summit` with distances between the centre of each motif and its
+`ctcf_read_sum_motif` outputs a list of length 2.
+
+- `peak_set` with peak information, as a `GRanges` object.  
+- `distance_to_summit` with distances between the centre of each motif and its
 nearest peak summit.  
 
 **NOTE**: When a motif is found multiple times within a single peak, the
-`peak_set` and `distance_to_summit` objects will contain multiple entries (rows)
-corresponding to the same peak. Each of these entries represents a distinct
-occurrence of the motif within that peak.
+`peak_set` objects will contain multiple entries (rows) corresponding to the 
+same peak. Each of these entries represents a distinct occurrence of the motif 
+within that peak.
 
-#### Visualize results
+### Visualize results
 
-We can optionally visualize the distribution of distances by using
+We can optionally visualise the distribution of distances by using
 `density_plot()`.
 ```{r include  = TRUE, fig.width = 7, fig.height = 4}
 density_plot(
@@ -193,20 +189,13 @@ density_plot(
 )
 ```
 
-For this given example, we can observe the distribution of distances between the
-centre of each motif, and its nearest peak summit follows a normal distribution.
-With a mean of the distribution around 0 base pairs (bp), we can infer that the
-motif is likely to be located at the peak summit, suggesting that the identified
-peak summits are associated with binding of regulatory proteins.
+Notice how the distribution of summit-to-motif distances is centred on 0. This
+suggests that the peak summits are correctly profiling transcription factor 
+binding sites.
 
 
 > **NOTE:** Since AME and FIMO accept different parameters and are calculated
 independently, it is not possible to obtain directly comparable results.
-
-
-## Future Enchancements
-
-- Calculate metrics for more than one motif at a time.  
 
 
 ## Session Info
