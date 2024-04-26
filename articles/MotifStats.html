@@ -79,17 +79,16 @@
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p><code>MotifStats</code> is a simple R package to calculate the the
-metrics to quantify the relationship between peaks and motifs. It is
-based on <a href="https://meme-suite.org/meme/doc/ame.html" class="external-link">Analysis of
-Motif Enrichment (AME)</a> and <a href="https://meme-suite.org/meme/doc/fimo.html" class="external-link">Find Individual Motif
+<p><code>MotifStats</code> is a simple R package to calculate metrics to
+quantify the relationship between peaks and motifs. It uses <a href="https://meme-suite.org/meme/doc/ame.html" class="external-link">Analysis of Motif
+Enrichment (AME)</a> and <a href="https://meme-suite.org/meme/doc/fimo.html" class="external-link">Find Individual Motif
 Occurrences (FIMO)</a> from the <a href="https://meme-suite.org/meme/index.html" class="external-link">MEME suite</a>.</p>
-<p><br> It has two distinct functions:</p>
+<p><br> The package has two distinct functions:</p>
 <ol style="list-style-type: decimal">
-<li>Calculate motif enrichment motif enrichment relative to a set of
-background sequences using AME.</li>
+<li>Calculate the enrichment of a given motif in a set of peaks using
+AME</li>
 <li>Calculate the distance between each motif and its nearest peak
-summit, where each motif is identified using FIMO.</li>
+summit. FIMO is used to recover the locations of each motif.</li>
 </ol>
 </div>
 <div class="section level2">
@@ -113,18 +112,18 @@ matrix ID <a href="http://jaspar.genereg.net/matrix/MA1930.2/" class="external-l
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <p><code>MotifStats</code> relies on <a href="https://meme-suite.org/meme/index.html" class="external-link">MEME suite</a> as a system
-dependency. Directions for installation can be found <a href="https://www.bioconductor.org/packages/release/bioc/vignettes/memes/inst/doc/install_guide.html" class="external-link">here</a>.<br><br> To install the package, use the following command:</p>
+dependency. Directions for installation can be found <a href="https://www.bioconductor.org/packages/release/bioc/vignettes/memes/inst/doc/install_guide.html" class="external-link">here</a>.<br><br> To install the package, run the following command:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st"><a href="https://remotes.r-lib.org" class="external-link">"remotes"</a></span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st"><a href="https://remotes.r-lib.org" class="external-link">"remotes"</a></span><span class="op">)</span><span class="op">)</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"neurogenomics/MotifStats"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
 </h2>
-<p>In this example analysis, we will compare the enrichment of the CTCF
-motif in CTCF TIP-seq peaks relative to the background. We will also
-calculate the distance between the centre of each motif occurrence and
-its nearest peak summit.</p>
+<p>In this example analysis, we will examine the relationship between
+the CTCF motif and CTCF peaks. This includes calculating enrichment of
+motifs in peaks and the distances between motifs and peak summits.</p>
 <div class="section level3">
 <h3 id="load-packages">Load packages<a class="anchor" aria-label="anchor" href="#load-packages"></a>
 </h3>
@@ -162,40 +161,41 @@ object) data.</p>
 <h3 id="calculate-motif-enrichment">Calculate motif enrichment<a class="anchor" aria-label="anchor" href="#calculate-motif-enrichment"></a>
 </h3>
 <p>To calculate the motif relative to a set of background sequences, we
-use <code><a href="../reference/peak_proportion.html">peak_proportion()</a></code>.</p>
+use <code><a href="../reference/motif_enrichment.html">motif_enrichment()</a></code>.</p>
 <ul>
-<li>Under the hood, it calls <code>meme::runAme</code> for motif
-enrichment scoring. In context of this call, it identifies the
-occurrences of input motif in the input sequences compared with
-background sequences and outputs relevant statistics.</li>
+<li>Under the hood, it calls <code>meme::runAme</code> from the MEME
+suite. This function calculates the enrichment of the input motif in a
+set of target sequences relative to a set of background sequences.</li>
 <li>A 0-order background model with the same nucleotide composition as
-the input sequences is generated for comparison.</li>
+the input sequences is used to generate the background sequences.</li>
 <li>An additional <code>out_dir</code> argument can be used to specify
 the directory to save the AME output files<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a> and the background
 model.</li>
 </ul>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ctcf_read_prop</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/peak_proportion.html">peak_proportion</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">ctcf_read_prop</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/motif_enrichment.html">motif_enrichment</a></span><span class="op">(</span></span>
 <span>  peak_input <span class="op">=</span> <span class="va">ctcf_peaks</span>,</span>
 <span>  motif <span class="op">=</span> <span class="va">ctcf_motif</span>,</span>
-<span>  genome_build <span class="op">=</span> <span class="fu">BSgenome.Hsapiens.UCSC.hg38</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/BSgenome.Hsapiens.UCSC.hg38/man/package.html" class="external-link">BSgenome.Hsapiens.UCSC.hg38</a></span></span>
+<span>  genome_build <span class="op">=</span> <span class="fu">BSgenome.Hsapiens.UCSC.hg38</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/BSgenome.Hsapiens.UCSC.hg38/man/package.html" class="external-link">BSgenome.Hsapiens.UCSC.hg38</a></span>,</span>
+<span>  out_dir <span class="op">=</span> <span class="st">"."</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; Generating a 0-order background model</span></span>
-<span><span class="co">#&gt; Background model saved to /tmp/Rtmpn7GJLb/background_model.txt</span></span></code></pre></div>
-<p><code>ctcf_read_prop</code> is a list with two components:<br>
-1. <code>$tp</code> (True positives) with the number of true positive
-motif occurrences in the given sequence followed by its relative
-percentage.<br>
-1. <code>$fp</code> (False positives) with the number of false positive
-motif occurrences in the given sequence followed by its relative
-percentage.</p>
-<p>In context of this function, the true positives represent to the
-number/percentage of peaks with an associated motif occurrence, while
-the false positives represent the number/percentage of peaks without an
-associated motif occurrence.</p>
+<span><span class="co">#&gt; Background model saved to ./background_model.txt</span></span></code></pre></div>
+<p><code>ctcf_read_prop</code> is a list of length 3.</p>
+<ul>
+<li>
+<code>$tp</code> (True positives) refers to the proportion of peaks
+that contain the motif.</li>
+<li>
+<code>$fp</code> (False positives) refers to the proportion of
+background sequences that contain the motif.</li>
+<li>
+<code>$positive_peaks</code> A filtered peak set containing only
+those peaks that have the motif.</li>
+</ul>
 </div>
 <div class="section level3">
-<h3 id="find-motif-summit-distances">Find motif-summit distances<a class="anchor" aria-label="anchor" href="#find-motif-summit-distances"></a>
+<h3 id="calculate-motif-summit-distances">Calculate motif-summit distances<a class="anchor" aria-label="anchor" href="#calculate-motif-summit-distances"></a>
 </h3>
 <p>To calculate the distance between each motif and its nearest peak
 summit, we use <code><a href="../reference/summit_to_motif.html">summit_to_motif()</a></code>.</p>
@@ -219,22 +219,27 @@ the directory to save the 0-order background file.</li>
 <span>  genome_build <span class="op">=</span> <span class="fu">BSgenome.Hsapiens.UCSC.hg38</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/BSgenome.Hsapiens.UCSC.hg38/man/package.html" class="external-link">BSgenome.Hsapiens.UCSC.hg38</a></span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; Generating a 0-order background model</span></span>
-<span><span class="co">#&gt; Background model saved to /tmp/Rtmpn7GJLb/background_model.txt</span></span>
+<span><span class="co">#&gt; Background model saved to /tmp/Rtmp8lSPkD/background_model.txt</span></span>
 <span><span class="co">#&gt; The p-value threshold for motif scanning with FIMO is 0.000102758130701511</span></span></code></pre></div>
-<p><code>ctcf_read_sum_motif</code> is a list with two objects:<br>
-1. <code>peak_set</code> with peak information, as a
+<p><code>ctcf_read_sum_motif</code> outputs a list of length 2.</p>
+<ul>
+<li>
+<code>peak_set</code> with peak information, as a
 <code>GRanges</code> object.<br>
-2. <code>distance_to_summit</code> with distances between the centre of
-each motif and its nearest peak summit.</p>
+</li>
+<li>
+<code>distance_to_summit</code> with distances between the centre of
+each motif and its nearest peak summit.</li>
+</ul>
 <p><strong>NOTE</strong>: When a motif is found multiple times within a
-single peak, the <code>peak_set</code> and
-<code>distance_to_summit</code> objects will contain multiple entries
-(rows) corresponding to the same peak. Each of these entries represents
-a distinct occurrence of the motif within that peak.</p>
-<div class="section level4">
-<h4 id="visualize-results">Visualize results<a class="anchor" aria-label="anchor" href="#visualize-results"></a>
-</h4>
-<p>We can optionally visualize the distribution of distances by using
+single peak, the <code>peak_set</code> objects will contain multiple
+entries (rows) corresponding to the same peak. Each of these entries
+represents a distinct occurrence of the motif within that peak.</p>
+</div>
+<div class="section level3">
+<h3 id="visualize-results">Visualize results<a class="anchor" aria-label="anchor" href="#visualize-results"></a>
+</h3>
+<p>We can optionally visualise the distribution of distances by using
 <code><a href="../reference/density_plot.html">density_plot()</a></code>.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/density_plot.html">density_plot</a></span><span class="op">(</span></span>
@@ -243,27 +248,16 @@ a distinct occurrence of the motif within that peak.</p>
 <span>  x_label <span class="op">=</span> <span class="st">"Distance to summit (bp)"</span>,</span>
 <span>  y_label <span class="op">=</span> <span class="st">"Density"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="MotifStats_files/figure-html/unnamed-chunk-10-1.png" width="672"></p>
-<p>For this given example, we can observe the distribution of distances
-between the centre of each motif, and its nearest peak summit follows a
-normal distribution. With a mean of the distribution around 0 base pairs
-(bp), we can infer that the motif is likely to be located at the peak
-summit, suggesting that the identified peak summits are associated with
-binding of regulatory proteins.</p>
+<p><img src="MotifStats_files/figure-html/unnamed-chunk-8-1.png" width="672"></p>
+<p>Notice how the distribution of summit-to-motif distances is centred
+on 0. This suggests that the peak summits are correctly profiling
+transcription factor binding sites.</p>
 <blockquote>
 <p><strong>NOTE:</strong> Since AME and FIMO accept different parameters
 and are calculated independently, it is not possible to obtain directly
 comparable results.</p>
 </blockquote>
 </div>
-</div>
-</div>
-<div class="section level2">
-<h2 id="future-enchancements">Future Enchancements<a class="anchor" aria-label="anchor" href="#future-enchancements"></a>
-</h2>
-<ul>
-<li>Calculate metrics for more than one motif at a time.</li>
-</ul>
 </div>
 <div class="section level2">
 <h2 id="session-info">Session Info<a class="anchor" aria-label="anchor" href="#session-info"></a>
