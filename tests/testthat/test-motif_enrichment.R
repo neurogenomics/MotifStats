@@ -5,7 +5,7 @@ test_that("list outputted by peak_proportion function", {
   temp_dir <- withr::local_tempdir()
   withr::defer(temp_dir)
 
-  res <- peak_proportion(
+  res <- motif_enrichment(
     peak_input = creb_peaks,
     motif = creb_motif,
     genome_build = BSgenome.Hsapiens.UCSC.hg38::BSgenome.Hsapiens.UCSC.hg38,
