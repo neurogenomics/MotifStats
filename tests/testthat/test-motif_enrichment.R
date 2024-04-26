@@ -1,4 +1,4 @@
-test_that("list outputted by peak_proportion function", {
+test_that("list outputted by motif_enrichment function", {
   data("creb_peaks", package = "MotifStats")
   data("creb_motif", package = "MotifStats")
 

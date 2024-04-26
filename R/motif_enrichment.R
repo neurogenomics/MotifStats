@@ -54,7 +54,8 @@ motif_enrichment <- function(peak_input,
                            database = list(motif),
                            outdir = out_dir)
 
-  seq <- read.table("sequences.tsv", header = TRUE)
+  seq_path <- file.path(out_dir, "sequences.tsv")
+  seq <- read.table(seq_path, header = TRUE)
   cleaned_ids <- seq$seq_ID[!grepl("_shuf_1", seq$seq_ID)]
 
   return(
