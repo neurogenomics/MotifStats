@@ -5,6 +5,7 @@
 #' \link{memes}.
 #'
 #' @importFrom memes runAme
+#' @importFrom utils read.table
 #' @import GenomicRanges
 #'
 #' @param peak_input Either a path to the narrowPeak file or a GRanges peak
@@ -55,7 +56,7 @@ motif_enrichment <- function(peak_input,
                            outdir = out_dir)
 
   seq_path <- file.path(out_dir, "sequences.tsv")
-  seq <- read.table(seq_path, header = TRUE)
+  seq <- utils::read.table(seq_path, header = TRUE)
   cleaned_ids <- seq$seq_ID[!grepl("_shuf_1", seq$seq_ID)]
 
   return(
