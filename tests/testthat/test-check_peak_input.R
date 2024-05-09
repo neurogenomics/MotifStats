@@ -9,9 +9,9 @@ test_that("fail when peaks are incorrectly formatted", {
 })
 
 test_that("list outputted by check_peak_input function", {
-  data("creb_peaks", package = "MotifStats")
+  data("ctcf_peaks", package = "MotifStats")
   res <- check_peak_input(
-    creb_peaks,
+    ctcf_peaks,
     genome_build = BSgenome.Hsapiens.UCSC.hg38::BSgenome.Hsapiens.UCSC.hg38
   )
 

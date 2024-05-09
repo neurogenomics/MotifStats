@@ -1,10 +1,10 @@
 test_that("file created by markov_background_model function", {
   temp_dir <- withr::local_tempdir()
 
-  data("creb_peaks", package = "MotifStats")
+  data("ctcf_peaks", package = "MotifStats")
   genome_build <- BSgenome.Hsapiens.UCSC.hg38::BSgenome.Hsapiens.UCSC.hg38
   peak_sequences <- BSgenome::getSeq(genome_build,
-                                     creb_peaks)
+                                     ctcf_peaks)
 
   res <- markov_background_model(sequences = peak_sequences,
                                  out_dir = temp_dir)

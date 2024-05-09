@@ -37,7 +37,7 @@ read_motif_file <- function(motif_file,
   )
 
   if (!file_format %in% names(read_functions)) {
-    stop(
+    stopper(
       "Unsupported file format. The motif file must be one of",
       "homer, jaspar, meme, transfac or uniprobe."
     )
