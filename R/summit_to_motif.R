@@ -65,7 +65,7 @@ summit_to_motif <- function(peak_input,
                             thresh = fimo_threshold,
                             ...)
 
-  # Return NULL lists if FIMO matches are detected
+  # Return NULL lists if no FIMO matches are detected
   if (is.null(fimo_df)) return(
     list(peak_set = NULL,
          distance_to_summit = NULL)
