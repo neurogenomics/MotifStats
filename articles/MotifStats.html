@@ -146,10 +146,13 @@ obtained from JASPAR can be loaded as follows:</p>
 <p>Next, we load the narrowPeak files from MACS2/3<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">name_peaks</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_peak_file.html">read_peak_file</a></span><span class="op">(</span><span class="st">"/path/to/peak/file.narrowPeak"</span><span class="op">)</span></span></code></pre></div>
+<p>Alternatively, we may load the BED files from SEACR<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">name_peaks</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_peak_file.html">read_peak_file</a></span><span class="op">(</span><span class="st">"/path/to/peak/file.bed"</span><span class="op">)</span></span></code></pre></div>
 <p>For this example, we will load the built-in CTCF TIP-seq peaks (as
 <code>GRanges</code> object) and CREB motif (as <code>PWMatrix</code>
 object) data.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"ctcf_motif"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"ctcf_peaks"</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -165,10 +168,10 @@ set of target sequences relative to a set of background sequences.</li>
 <li>A 0-order background model with the same nucleotide composition as
 the input sequences is used to generate the background sequences.</li>
 <li>An additional <code>out_dir</code> argument can be used to specify
-the directory to save the AME output files<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a> and the background
+the directory to save the AME output files<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a> and the background
 model.</li>
 </ul>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ctcf_read_prop</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/motif_enrichment.html">motif_enrichment</a></span><span class="op">(</span></span>
 <span>  peak_input <span class="op">=</span> <span class="va">ctcf_peaks</span>,</span>
 <span>  motif <span class="op">=</span> <span class="va">ctcf_motif</span>,</span>
@@ -207,7 +210,7 @@ the input sequences is generated for comparison.<br>
 <li>An additional <code>out_dir</code> argument can be used to specify
 the directory to save the 0-order background file.</li>
 </ul>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ctcf_read_sum_motif</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/summit_to_motif.html">summit_to_motif</a></span><span class="op">(</span></span>
 <span>  peak_input <span class="op">=</span> <span class="va">ctcf_peaks</span>,</span>
 <span>  motif <span class="op">=</span> <span class="va">ctcf_motif</span>,</span>
@@ -215,7 +218,7 @@ the directory to save the 0-order background file.</li>
 <span>  genome_build <span class="op">=</span> <span class="fu">BSgenome.Hsapiens.UCSC.hg38</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/BSgenome.Hsapiens.UCSC.hg38/man/package.html" class="external-link">BSgenome.Hsapiens.UCSC.hg38</a></span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; Generating a 0-order background model</span></span>
-<span><span class="co">#&gt; Background model saved to /tmp/RtmpLLc7ij/background_model.txt</span></span>
+<span><span class="co">#&gt; Background model saved to /tmp/Rtmp9tWKPv/background_model.txt</span></span>
 <span><span class="co">#&gt; The p-value threshold for motif scanning with FIMO is 0.000102758130701511</span></span></code></pre></div>
 <p><code>ctcf_read_sum_motif</code> outputs a list of length 2.</p>
 <ul>
@@ -237,14 +240,14 @@ represents a distinct occurrence of the motif within that peak.</p>
 </h3>
 <p>We can optionally visualise the distribution of distances by using
 <code><a href="../reference/density_plot.html">density_plot()</a></code>.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/density_plot.html">density_plot</a></span><span class="op">(</span></span>
 <span>  <span class="va">ctcf_read_sum_motif</span><span class="op">$</span><span class="va">distance_to_summit</span>,</span>
 <span>  plot_title <span class="op">=</span> <span class="st">"CTCF motif distance to summit"</span>,</span>
 <span>  x_label <span class="op">=</span> <span class="st">"Distance to summit (bp)"</span>,</span>
 <span>  y_label <span class="op">=</span> <span class="st">"Density"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="MotifStats_files/figure-html/unnamed-chunk-8-1.png" width="672"></p>
+<p><img src="MotifStats_files/figure-html/unnamed-chunk-9-1.png" width="672"></p>
 <p>Notice how the distribution of summit-to-motif distances is centred
 on 0. This suggests that the peak summits are correctly profiling
 transcription factor binding sites.</p>
@@ -348,9 +351,11 @@ comparable results.</p>
 file size.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
 <li id="fn2"><p>narrowPeak files from both version 2 and 3 of <a href="https://github.com/macs3-project/MACS" class="external-link">MACS: Model-based Analysis
 for ChIP-Seq</a> is supported.<a href="#fnref2" class="footnote-back">↩︎</a></p></li>
-<li id="fn3"><p>For more information on the output files, refer to the
+<li id="fn3"><p>BED files from <a href="https://github.com/FredHutch/SEACR" class="external-link">SEACR: Sparse Enrichment
+Analysis for CUT&amp;RUN</a><a href="#fnref3" class="footnote-back">↩︎</a></p></li>
+<li id="fn4"><p>For more information on the output files, refer to the
 <a href="https://meme-suite.org/meme/doc/ame.html" class="external-link">AME
-documentation</a>.<a href="#fnref3" class="footnote-back">↩︎</a></p></li>
+documentation</a>.<a href="#fnref4" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
   </div>
