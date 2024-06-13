@@ -19,6 +19,7 @@ Imports:
   BSgenome,
   GenomicRanges,
   ggplot2,
+  IRanges,
   memes,
   rGADEM,
   rtracklayer,

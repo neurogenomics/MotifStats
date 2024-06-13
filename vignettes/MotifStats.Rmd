@@ -97,6 +97,11 @@ Next, we load the narrowPeak files from MACS2/3[^f2].
 name_peaks <- read_peak_file("/path/to/peak/file.narrowPeak")
 ```
 
+Alternatively, we may load the BED files from SEACR[^f3].
+```{r eval = FALSE}
+name_peaks <- read_peak_file("/path/to/peak/file.bed")
+```
+
 For this example, we will load the built-in CTCF TIP-seq peaks (as `GRanges`
 object) and CREB motif (as `PWMatrix` object) data.
 ```{r include  = TRUE}
@@ -116,7 +121,7 @@ relative to a set of background sequences.
 - A 0-order background model with the same nucleotide composition as the input
 sequences is used to generate the background sequences. 
 - An additional `out_dir` argument can be used to specify the
-directory to save the AME output files[^f3] and the background model.  
+directory to save the AME output files[^f4] and the background model.  
 
 ```{r include  = TRUE}
 ctcf_read_prop <- motif_enrichment(
@@ -206,5 +211,7 @@ sessionInfo()
 [^f1]: The peak file is a subset of chromosome 19 to reduce the file size.
 [^f2]: narrowPeak files from both version 2 and 3 of [MACS: Model-based Analysis
 for ChIP-Seq](https://github.com/macs3-project/MACS) is supported.
-[^f3]: For more information on the output files, refer to the
+[^f3]: BED files from
+[SEACR: Sparse Enrichment Analysis for CUT&RUN](https://github.com/FredHutch/SEACR)
+[^f4]: For more information on the output files, refer to the
 [AME documentation](https://meme-suite.org/meme/doc/ame.html).
