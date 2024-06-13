@@ -64,6 +64,13 @@ summit_to_motif <- function(peak_input,
                             bfile = bfile,
                             thresh = fimo_threshold,
                             ...)
+
+  # Return NULL lists if no FIMO matches are detected
+  if (is.null(fimo_df)) return(
+    list(peak_set = NULL,
+         distance_to_summit = NULL)
+  )
+
   index_to_repeat <- base::match(as.vector(GenomicRanges::seqnames(fimo_df)),
                                  names(peaks))
   expanded_peaks <- peaks[index_to_repeat]
