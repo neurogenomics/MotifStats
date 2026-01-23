@@ -12,6 +12,11 @@ status](https://github.com/Tomrrr1/MotifStats/workflows/rworkflows/badge.svg)](h
 Authors: <i>Thomas Roberts</i>  
 </h4>
 
+> ⚠️ **Note:** This package has been superseded by [MotifPeeker](https://github.com/neurogenomics/MotifPeeker),
+> which is now on [Bioconductor](https://bioconductor.org/packages/MotifPeeker). MotifPeeker incorporates all
+> MotifStats functionality plus additional features (HTML reports, JASPAR integration, bootstrapping).
+> Please use MotifPeeker for new projects.
+
 ## MotifStats
 
 `MotifStats` is an R package for calculating metrics that quantify the
